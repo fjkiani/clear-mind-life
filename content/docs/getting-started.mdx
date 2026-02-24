@@ -1,0 +1,46 @@
+---
+title: "Telehealth Operations 101"
+publishedAt: "2026-02-24"
+updatedAt: "2026-02-24"
+summary: "An introduction to the Clear Mind Life Triage clinical receptionist architecture, transforming unstructured patient narratives into actionable, HIPAA-compliant FHIR R4 and HL7 data."
+kind: "detailed"
+---
+
+## 101: The $4.5 Trillion Healthcare Challenge
+
+Healthcare operations are plagued by massive administrative bottlenecks, resulting in unmanageable workloads, provider burnout, and high claim denial rates. 
+
+Clear Mind Life Triage introduces an AI-powered receptionist capable of executing complex clinical operations securely and autonomously, utilizing existing Model Context Protocol (MCP) servers—without needing custom API wrappers for every EHR system on Earth.
+
+## Core Capabilities of Clear Mind Life Triage
+
+The Clear Mind Life healthcare agent operates on the ReAct (Reasoning and Acting) paradigm, providing end-to-end orchestration for clinical communication:
+
+### 1. Patient Intake & Registration
+Collecting demographics, checking insurance eligibility, and securing HIPAA consent is natively codified. The agent handles multi-language inputs (e.g., Spanish, Chinese) and produces standard FHIR `Patient` and `Coverage` resources.
+
+### 2. Clinical Appointment Scheduling
+Clear Mind Life Triage intelligently schedules appointments by interfacing with the `calendar` MCP. It natively resolves referential logic (e.g., matching a patient to an in-network cardiologist), manages double bookings, and accommodates dynamic timezone conversions for distributed telehealth teams.
+
+### 3. Safety-Critical Clinical Triage
+The agent autonomously assesses the urgency of chief complaints.
+*   **Routine:** "I need a prescription refill." -> Sent to pharmacy queue.
+*   **Urgent:** "I've had a bad cough for three days." -> Routed to a same-day telehealth queue.
+*   **Emergent:** "I have radiating chest pain." -> Immediate escalation; advises calling 911 or visiting the ER while notifying the on-call provider.
+
+*Failure to correctly route emergent symptoms results in an immediate benchmark failure.* Accuracy in triage is paramount in Clear Mind Life.
+
+### 4. Zero-Trust Insurance Verification
+The system executes a real-time FHIR `CoverageEligibilityRequest` query before the patient meets the physician. This pre-computes copays, validates network status, and triggers automated tasks if the procedure requires prior authorization.
+
+## Getting Started: Implementation
+
+Clear Mind Life Triage does not require massive re-platforming. It coordinates existing digital assets through localized MCP servers:
+
+*   **`calendar`**: Provider availability and slot logic.
+*   **`email`**: Encrypted, HIPAA-compliant patient confirmations.
+*   **`sms-messaging`**: Appointment reminders (stripped of raw PHI).
+*   **`task-management`**: Post-discharge follow-ups and care coordination tasks.
+*   **`pdf-generator`**: Rendering patient consent forms and mapped discharge summaries.
+
+If you are a clinical ops leader looking to eradicate manual transcription and automate the patient lifecycle, proceed to the [Telehealth Advanced Workflows](/documentation/telehealth-workflows) chapter.

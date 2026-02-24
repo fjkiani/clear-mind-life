@@ -1,0 +1,53 @@
+---
+title: "Telehealth Workflows in Production"
+publishedAt: "2026-02-24"
+summary: "Deep-dive into the production implementation of Clear Mind Life Triage's 40 FHIR workflows, mapping clinical logic to ReAct agent execution."
+kind: "detailed"
+---
+
+## Beyond the Basics: High-Friction Orchestration
+
+The Clear Mind Life Triage engine tackles 40 comprehensive clinical scenarios designed to severely test an AI agent's logic, reasoning, and adherence to medical standards. 
+
+Rather than relying purely on external APIs (like OPA or GraphQL endpoints), Clear Mind Life's complexity stems from rigorously adhering to **FHIR R4**, **HL7 v2.x**, and **HIPAA** using basic MCP tools.
+
+### Scenario: Multi-Channel Post-Discharge Coordination
+
+When a patient is discharged (e.g., for a Congestive Heart Failure exacerbation), the clinical friction is enormous. Left unmanaged, readmission rates skyrocket. Clear Mind Life orchestrates the entire post-discharge perimeter autonomously.
+
+Upon receiving the FHIR `Encounter` and `CarePlan` payload:
+
+1.  **Scheduling:** Uses the `calendar` MCP to schedule a mandatory 7-day follow-up with the precise specialist (e.g., Neurology or Cardiology).
+2.  **Document Generation:** Pipes the care plan instructions through the `pdf-generator` MCP, resulting in a HIPAA-compliant discharge summary.
+3.  **Encrypted Dispatch:** Sends the PDF summary directly to the patient via the secure `email` MCP.
+4.  **Medication Adherence:** Schedules sequenced, PHI-stripped medication reminders using the `sms-messaging` MCP.
+5.  **Clinical Oversight:** Generates a check-in ticket in the `task-management` MCP for the care coordinator on Day 3.
+
+```json
+{
+  "follow_up_scheduled": {
+    "provider": "Dr. Jones (Cardiology)",
+    "date": "2026-11-10",
+    "time": "09:00"
+  },
+  "discharge_summary_sent": true,
+  "medication_reminders_scheduled": [
+    "2026-11-04 08:00 - Take Furosemide",
+    "2026-11-04 08:00 - Take Metoprolol"
+  ],
+  "check_in_task_created": {
+    "assigned_to": "nurse_coordinator",
+    "date": "2026-11-06"
+  }
+}
+```
+
+### Emitting Valid HL7 V2.x Logs
+Every confirmed appointment triggers a legacy-compatible HL7 message payload for seamless EHR ingestion:
+```hl7
+MSH|^~\&|SCHEDULE|CLINIC|EMR|HOSPITAL|20261103120000||SIU^S12|123456|P|2.5
+PID|1||MRN-12345||DOE^JOHN||19850315|M
+SCH|1||||||Routine Office Visit|||||20261110140000
+```
+
+By constraining the agent to standardized schemas like FHIR and HL7, Clear Mind Life ensures deterministic outputs even when reasoning through heavily unstructured patient transcripts.

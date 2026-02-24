@@ -1,0 +1,59 @@
+
+> zeta-saas-frontend@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.4
+
+   Creating an optimized production build ...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/27) ...
+   Generating static pages (6/27) 
+   Generating static pages (13/27) 
+   Generating static pages (20/27) 
+VideoSDK SDK not installed. Install with: npm install @videosdk.live/react-sdk
+ ✓ Generating static pages (27/27)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    5.61 kB         112 kB
+├ ○ /_not-found                          879 B          88.1 kB
+├ ○ /api/hello                           0 B                0 B
+├ ○ /apps                                624 B          92.9 kB
+├ ○ /blog                                292 B          99.3 kB
+├ ƒ /blog/[slug]                         963 B           100 kB
+├ ○ /customers                           292 B          99.3 kB
+├ ○ /dashboard                           15.9 kB         110 kB
+├ ○ /dashboard/healthcare                177 B           102 kB
+├ ○ /dashboard/healthcare/appointments   4.69 kB        98.7 kB
+├ ○ /dashboard/healthcare/book           6.51 kB         100 kB
+├ ○ /dashboard/healthcare/coordination   2.25 kB        89.5 kB
+├ ○ /dashboard/healthcare/insurance      2.05 kB        89.3 kB
+├ ○ /dashboard/healthcare/records        2.68 kB        89.9 kB
+├ ○ /dashboard/healthcare/register       5.72 kB        92.9 kB
+├ ○ /dashboard/healthcare/telehealth     228 kB          315 kB
+├ ○ /dashboard/mcp                       5.39 kB        92.6 kB
+├ ○ /dashboard/security                  992 B          92.7 kB
+├ ○ /dashboard/security/benchmark        10.5 kB        97.7 kB
+├ ○ /dashboard/security/threats          4.04 kB        91.2 kB
+├ ○ /documentation                       146 B          87.3 kB
+├ ƒ /documentation/[slug]                2.23 kB         108 kB
+├ ○ /pricing                             5.1 kB          105 kB
+├ ○ /reset-password                      145 B          87.3 kB
+├ ○ /signin                              179 B          94.2 kB
+├ ○ /signup                              180 B          94.2 kB
+└ ○ /support                             3.1 kB          121 kB
++ First Load JS shared by all            87.2 kB
+  ├ chunks/7023-9b3d8f9b8bef57f9.js      31.5 kB
+  ├ chunks/fd9d1056-c4347cac76106f08.js  53.7 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

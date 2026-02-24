@@ -1,0 +1,77 @@
+---
+title: "Basics & Fundamentals"
+publishedAt: "2026-02-24"
+updatedAt: "2026-02-24"
+summary: "Understand the core architecture of Clear Mind Life: The unified ReAct agent design, the strict HIPAA compliance boundary, and the threat model matrix protecting against MFA fatigue and API exploits."
+kind: "detailed"
+---
+
+## Introduction
+
+Clear Mind Life is not a traditional CRUD application. It is a dual-engine architecture comprising **Clear Mind Life Identity** (Security/Identity) and **Clear Mind Life Triage** (Telehealth/Operations), entirely orchestrated by autonomous ReAct agents.
+
+This guide outlines the critical infrastructure principles you must adhere to when building extensions or integrating Clear Mind Life into your clinical or security environments.
+
+<Image
+  src="/images/docs-illustration.png"
+  width="740"
+  height="424"
+  alt="Clear Mind Life Architecture Diagram"
+/>
+
+## The ReAct Architecture
+
+At the core of Clear Mind Life is a unified ReAct (Reasoning and Acting) agent design powered by the **Model Context Protocol (MCP)**. 
+
+Unlike traditional APIs that require hardcoded if/else logic for every possible user action, the Clear Mind Life agent receives a high-level goal and autonomously selects the appropriate MCP servers to execute it. 
+
+The `mcp_client_service.py` acts as the neural bridge. For example, if a user requests to "Schedule an MRI," the agent:
+1. Calls the FHIR Schema translation MCP to locate the patient.
+2. Calls the Insurance Verification MCP to check prior-authorization rules for that specific CPT code.
+3. Calls the Calendar scheduling MCP to book the slot.
+
+<Banner title="Building Custom MCP Servers?">
+  Clear Mind Life allows you to plug in your own proprietary MCP servers. Ensure your servers conform to the standard `CallToolRequest` schema. Review our MCP integration guide to connect your internal databases.
+</Banner>
+
+## The HIPAA Compliance Boundary
+
+In healthcare operations, feeding raw Patient Health Information (PHI) to LLM providers is a critical violation. Clear Mind Life Triage enforces a strict, programmatic HIPAA Compliance Boundary.
+
+Before any data leaves the local Clear Mind Life execution environment to hit the cognitively reasoning agent layer, it passes through the `HIPAAFilter`.
+
+- **Detection:** Regex masks and Named Entity Recognition (NER) identify diagnosis identifiers (e.g., "diabetes", "cancer"), medication names, and raw lab values.
+- **Sanitization:** The data is transformed ("Patient has a diabetes appointment" becomes "Patient has an endocrinology appointment").
+- **Execution:** The agent orchestrates the calendar tools using the sanitized string.
+
+## Threat Model Matrix
+
+Clear Mind Life Identity is designed to autonomously neutralize threats that bypass legacy static infrastructures. 
+
+### 1. MFA Fatigue & Prompt Bombing
+When an attacker spams a user's phone with MFA requests, legacy IdPs eventually grant access if the user clicks "Approve." Clear Mind Life Identity evaluates the contextual velocity of the requests. If 14 prompts occur in 5 minutes from an unfamiliar ASN, the agent invalidates the session token immediately, dropping the MFA fatigue success rate to zero.
+
+### 2. Cross-Tenant IDOR (Insecure Direct Object Reference)
+Clear Mind Life Identity does not rely on static JWTs for determining access rights. The agent validates every database query against the user's granular RBAC matrix in real-time, preventing lateral movement even if an API key is compromised.
+
+## FHIR Schema Translation
+
+To combat the $20 Billion lost annually to claims denials caused by intake paperwork errors, Clear Mind Life natively translates all unstructured clinical text into **FHIR R4 resources**.
+
+When integrating Clear Mind Life Triage into your clinic, you do not need to adapt your doctors' raw notes. The Telehealth agent parses the audio/video transcript, extracts the chief complaint, validates the ICD-10 codes, and structures the entire encounter into a standard FHIR payload ready for the clearinghouse.
+
+### Example: Validation Error
+
+If an extension attempts to push invalid FHIR schemas, the ReAct agent will intercept it and throw a validation error before the database layer is hit:
+
+```bash
+{
+  "message": "Schema Validation Failed",
+  "code": "fhir_r4_compliance_error",
+  "details": ["Missing required field: Patient.identifier"],
+}
+```
+
+## Conclusion
+
+By adhering to the ReAct agent paradigm and strictly respecting the HIPAA and Threat Model boundaries, you can use Clear Mind Life to automate highly complex, highly regulated operations.
