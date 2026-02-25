@@ -127,10 +127,10 @@ export default function Home() {
             <Lead>We don't sell generic chatbots. We deploy three highly-specialized agents that intercept the critical failure points of your revenue cycle — <Highlight color="indigo">your staff stays in command</Highlight>.</Lead>
           </div>
 
-          <div className="space-y-32">
+          <div className="space-y-16 lg:space-y-24">
 
             {/* Agent 1: Receptionist */}
-            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 py-16 border-b border-gray-100 relative">
+            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 pb-16 border-b border-gray-100 relative">
               <div className="w-full md:w-1/2 rounded-3xl bg-gray-50 border border-gray-200 shadow-2xl p-8 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-100/50 border border-blue-200 text-blue-800 text-xs font-mono font-bold">
@@ -205,7 +205,7 @@ export default function Home() {
             </div>
 
             {/* Agent 2: Encounter */}
-            <div className="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20 py-16 border-b border-gray-100 relative">
+            <div className="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20 pb-16 border-b border-gray-100 relative">
               <div className="w-full md:w-1/2 rounded-3xl bg-gray-900 border border-gray-800 shadow-2xl p-8 relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500"></div>
                 <div className="mb-6 flex justify-between items-center">
@@ -278,7 +278,7 @@ export default function Home() {
             </div>
 
             {/* Agent 3: Billing */}
-            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 py-16 relative">
+            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 pb-16 relative">
               <div className="w-full md:w-1/2 rounded-3xl bg-gray-50 border border-gray-200 shadow-2xl p-8 relative overflow-hidden group">
                 <div className="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
                   <h4 className="font-black text-gray-900 tracking-wider uppercase text-sm">Claims Scrubbing Queue</h4>
@@ -438,21 +438,21 @@ export default function Home() {
       </section>
 
       {/* ── Consolidation CTA ── */}
-      <section className="py-24 px-6 bg-gray-950 text-white shrink-0">
+      <section className="py-24 px-6 bg-slate-50 border-t border-gray-200 shrink-0">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm font-bold mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-sm font-bold mb-8 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
             Zero Lock-In Guarantee
           </div>
-          <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">Retain Your Infrastructure</h2>
-          <p className="text-xl text-gray-400 font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
+          <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight">Retain Your Infrastructure</h2>
+          <p className="text-xl text-gray-600 font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
             Legacy kiosks and point solutions try to trap your data. Clear Mind uses a BYOD (Bring Your Own Device) architecture. We don't rip and replace your hardware; we orchestrate it via standard APIs.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link
               href="/compare"
-              className="px-8 py-4 rounded-xl bg-white hover:bg-gray-100 text-gray-950 text-lg font-black transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
+              className="px-8 py-4 rounded-xl bg-gray-900 hover:bg-black text-white text-lg font-black transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
             >
               See the Legacy Vendor Teardowns
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

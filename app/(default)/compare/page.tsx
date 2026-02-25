@@ -37,9 +37,9 @@ type Vendor = {
 
 const vendors: Vendor[] = [
     {
-        id: 'intake',
-        name: 'Patient Intake',
-        category: 'Legacy Kiosks & Portals',
+        id: 'receptionist',
+        name: 'The Receptionist Node',
+        category: 'vs Legacy Kiosks',
         icon: FileText,
         legacyComponent: <LegacyIntakeSimulator />,
         benchmark: {
@@ -58,9 +58,9 @@ const vendors: Vendor[] = [
         component: <div className="scale-90 origin-top -m-8"><EligibilityChecker /></div>
     },
     {
-        id: 'clinical',
-        name: 'Clinical Documentation',
-        category: 'Scribes & Basic AI',
+        id: 'encounter',
+        name: 'The Encounter Node',
+        category: 'vs Scribes & Basic NLP',
         icon: Activity,
         legacyComponent: <LegacyScribeSimulator />,
         benchmark: {
@@ -73,15 +73,15 @@ const vendors: Vendor[] = [
         collateralDamage: [
             "2+ hours of evening 'pajama time' for providers.",
             "Up to 30% under-coding (lost revenue) from incomplete notes.",
-            "Multi-year, unbreakable scribe agency contracts."
+            "Multi-year, unbreakable dictation contracts."
         ],
         solutionTitle: 'The Clear Mind Encounter Agent',
         component: <div className="scale-[0.85] origin-top -m-12"><EncounterSimulator /></div>
     },
     {
-        id: 'rcm',
-        name: 'Revenue Cycle Management',
-        category: 'Rules Engines & Agencies',
+        id: 'billing',
+        name: 'The Billing Node',
+        category: 'vs Rules Engines',
         icon: TrendingDown,
         legacyComponent: <LegacyRcmSimulator />,
         benchmark: {
