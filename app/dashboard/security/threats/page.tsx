@@ -119,7 +119,7 @@ export default function ThreatScannerPage() {
                             placeholder={'{\n  "jwt_token": "...",\n  "ip": "...",\n  "username": "..."\n}'}
                             rows={10}
                             spellCheck={false}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-base text-green-400 font-mono placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-shadow shadow-inner leading-relaxed"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-base text-slate-800 font-mono placeholder-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-shadow shadow-inner leading-relaxed"
                         />
                         <button
                             onClick={handleScan}
