@@ -138,6 +138,16 @@ export default function Sidebar({
                 </SidebarLink>
               </li>
               <li>
+                <SidebarLink href="/dashboard/checkin">
+                  <div className="flex items-center pl-6">
+                    <span className="text-gray-300 mr-3 text-xs">→</span>
+                    <span className={`text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('checkin') ? 'text-violet-600 font-bold' : 'text-gray-600'}`}>
+                      Receptionist Engine
+                    </span>
+                  </div>
+                </SidebarLink>
+              </li>
+              <li>
                 <SidebarLink href="/dashboard/healthcare/book">
                   <div className="flex items-center pl-6">
                     <span className="text-gray-300 mr-3 text-xs">→</span>
@@ -168,11 +178,11 @@ export default function Sidebar({
                 </SidebarLink>
               </li>
               <li>
-                <SidebarLink href="/dashboard/healthcare/telehealth">
+                <SidebarLink href="/dashboard/encounter/sj-8921-a">
                   <div className="flex items-center pl-6">
                     <span className="text-gray-300 mr-3 text-xs">→</span>
-                    <span className={`text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('telehealth') ? 'text-violet-600 font-bold' : 'text-gray-600'}`}>
-                      Telehealth Video
+                    <span className={`text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('encounter') ? 'text-violet-600 font-bold' : 'text-gray-600'}`}>
+                      Encounter Engine
                     </span>
                   </div>
                 </SidebarLink>
@@ -198,11 +208,11 @@ export default function Sidebar({
                 </SidebarLink>
               </li>
               <li>
-                <SidebarLink href="/dashboard/healthcare/coordination">
+                <SidebarLink href="/dashboard/billing">
                   <div className="flex items-center pl-6">
                     <span className="text-gray-300 mr-3 text-xs">→</span>
-                    <span className={`text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('coordination') ? 'text-violet-600 font-bold' : 'text-gray-600'}`}>
-                      Care Coordination
+                    <span className={`text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('billing') ? 'text-violet-600 font-bold' : 'text-gray-600'}`}>
+                      Billing Engine
                     </span>
                   </div>
                 </SidebarLink>
@@ -261,7 +271,39 @@ export default function Sidebar({
               </li>
             </ul>
           </div>
+          {/* ── Agent Governance ── */}
+          <div>
+            <h3 className="text-xs uppercase text-gray-400 font-semibold pl-3 mb-3">
+              <span className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6" aria-hidden="true">•••</span>
+              <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">Agent Governance</span>
+            </h3>
+            <ul className="space-y-1">
+              <li>
+                <SidebarLink href="/dashboard/governance">
+                  <div className="flex items-center">
+                    <svg className={`shrink-0 fill-current ${segments.includes('governance') ? 'text-violet-500' : 'text-gray-400'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                      <path d="M8 0L1 3v5c0 4.4 3 8.5 7 9.5 4-1 7-5.1 7-9.5V3L8 0zm0 7h2v4H6V7h2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                    </svg>
+                    <span className={`text-base font-semibold ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('governance') ? 'text-violet-600' : 'text-gray-700'}`}>
+                      Certification Center
+                    </span>
+                  </div>
+                </SidebarLink>
+              </li>
+              <li>
+                <SidebarLink href="/dashboard/governance?domain=governance_traps">
+                  <div className="flex items-center pl-6">
+                    <span className="text-gray-300 mr-3 text-xs">→</span>
+                    <span className={`text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${segments.includes('traps') ? 'text-violet-500' : 'text-gray-600'}`}>
+                      4 Pillar Traps
+                    </span>
+                  </div>
+                </SidebarLink>
+              </li>
+            </ul>
+          </div>
           {/* ── MCP Network ── */}
+
           <div>
             <h3 className="text-xs uppercase text-gray-400 font-semibold pl-3 mb-3">
               <span className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6" aria-hidden="true">•••</span>
