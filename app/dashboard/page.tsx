@@ -1,136 +1,128 @@
-import FilterButton from '@/components/dashboard/dropdown-filter'
+"use client"
+
 import Datepicker from '@/components/dashboard/datepicker'
 import Link from 'next/link'
-import { Shield, Activity, Video, Users, Stethoscope, Lock, FileText, Bot } from 'lucide-react'
-
-export const metadata = {
-    title: 'Clear Mind Life Protocol - Command Center',
-}
+import { Activity, Video, Users, Stethoscope, ShieldCheck, DollarSign, BrainCircuit, Bot, PlayCircle } from 'lucide-react'
 
 export default function Dashboard() {
     return (
-        <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto bg-slate-50 dark:bg-slate-900 min-h-screen">
+        <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto bg-slate-50 min-h-screen font-inter">
             {/* Dashboard actions */}
-            <div className="sm:flex sm:justify-between sm:items-center mb-8">
-                {/* Left: Title */}
+            <div className="sm:flex sm:justify-between sm:items-center mb-10">
                 <div className="mb-4 sm:mb-0">
-                    <h1 className="text-2xl md:text-3xl text-slate-900 dark:text-white font-bold flex items-center gap-3">
-                        <Activity className="w-8 h-8 text-violet-600 dark:text-violet-400" />
-                        Clear Mind Life Command Center
+                    <h1 className="text-3xl md:text-4xl text-slate-900 font-black flex items-center gap-3 tracking-tight">
+                        <Activity className="w-8 h-8 text-violet-600" />
+                        Revenue Command Center
                     </h1>
-                    <p className="text-sm font-medium text-slate-500 mt-1">Unified matrix for Healthcare Operations, Identity Intelligence, and LLM Copilots</p>
+                    <p className="text-base font-medium text-slate-500 mt-2">Unified telemetry for your Autonomous Receptionist, Encounter, and Billing Agents.</p>
                 </div>
-                {/* Right: Actions */}
                 <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                     <Datepicker align="right" />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Today's Visits</span>
+                    <span className="text-3xl font-black text-slate-900">42</span>
+                    <span className="text-sm font-medium text-emerald-600 mt-1 flex items-center gap-1">↑ 12% vs yesterday</span>
+                </div>
+                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">SOAP Notes Approved</span>
+                    <span className="text-3xl font-black text-slate-900">38</span>
+                    <span className="text-sm font-medium text-emerald-600 mt-1 flex items-center gap-1">100% AI Generated</span>
+                </div>
+                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Predicted Pass Rate</span>
+                    <span className="text-3xl font-black text-emerald-600">98.4%</span>
+                    <span className="text-sm font-medium text-slate-400 mt-1 flex items-center gap-1">On 42 pending claims</span>
+                </div>
+                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Recovered Revenue</span>
+                    <span className="text-3xl font-black text-violet-600">$4,250</span>
+                    <span className="text-sm font-medium text-slate-400 mt-1 flex items-center gap-1">Saved via Denial AI Today</span>
+                </div>
+            </div>
 
-                {/* Healthcare & Telehealth Hub */}
+            {/* The 3 Agents Grid */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+                {/* Agent 1: Receptionist */}
                 <div className="flex flex-col gap-6">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                                <Stethoscope className="w-6 h-6 text-indigo-500" />
-                                Healthcare Hub
-                            </h2>
-                            <span className="text-xs font-bold uppercase tracking-widest bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400 px-3 py-1 rounded-full">
-                                AI Accelerated
+                    <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-md hover:shadow-xl transition-all h-full relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 blur-3xl rounded-full group-hover:bg-sky-500/20 transition-colors"></div>
+                        <div className="flex items-center justify-between mb-8 relative z-10">
+                            <div className="w-14 h-14 bg-sky-50 rounded-2xl flex items-center justify-center border border-sky-100">
+                                <Users className="w-7 h-7 text-sky-600" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-widest bg-sky-100 text-sky-700 px-3 py-1.5 rounded-full border border-sky-200/50">
+                                Real-Time X12
                             </span>
                         </div>
-
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            <Link href="/dashboard/healthcare/telehealth" className="group p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all hover:shadow-md">
-                                <div className="bg-indigo-100 dark:bg-indigo-500/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors text-indigo-600 dark:text-indigo-400">
-                                    <Video className="w-6 h-6" />
-                                </div>
-                                <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">Telehealth Co-Pilot</h3>
-                                <p className="text-xs font-medium text-slate-500">Video SDK rooms with real-time AssemblyAI transcription & GPT-4o Action Reports.</p>
+                        <div className="relative z-10">
+                            <h2 className="text-2xl font-black text-slate-900 mb-2">Receptionist Agent</h2>
+                            <p className="text-sm font-medium text-slate-500 leading-relaxed mb-8">
+                                Zero-click insurance verification via Availity. Automatically pulls patient copays, deductibles, and prior-auth status before they arrive.
+                            </p>
+                            <Link href="/dashboard/checkin" className="inline-flex items-center justify-center w-full gap-2 px-6 py-3.5 bg-slate-900 hover:bg-black text-white text-sm font-bold rounded-xl transition-colors shadow-sm">
+                                <PlayCircle className="w-4 h-4" />
+                                Launch Eligibility Simulator
                             </Link>
-
-                            <Link href="/dashboard/healthcare/appointments" className="group p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-sky-400 dark:hover:border-sky-500 transition-all hover:shadow-md">
-                                <div className="bg-sky-100 dark:bg-sky-500/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-sky-600 group-hover:text-white transition-colors text-sky-600 dark:text-sky-400">
-                                    <Users className="w-6 h-6" />
-                                </div>
-                                <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">NexHealth Appointments</h3>
-                                <p className="text-xs font-medium text-slate-500">Live booking integration with NexHealth API MCP server capabilities.</p>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                                <Bot className="w-5 h-5 text-emerald-500" />
-                                Recent AI Transcriptions
-                            </h2>
-                        </div>
-                        <div className="text-sm font-medium text-slate-500 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-5 py-8 text-center border-dashed">
-                            Navigate to <b>Telehealth Co-Pilot</b> to initiate a video session. The LLM transcriptions will appear in real-time.
                         </div>
                     </div>
                 </div>
 
-                {/* Security & Identity Hub */}
+                {/* Agent 2: Encounter */}
                 <div className="flex flex-col gap-6">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                                <Shield className="w-6 h-6 text-rose-500" />
-                                Identity & Security Matrix
-                            </h2>
-                            <span className="text-xs font-bold uppercase tracking-widest bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400 px-3 py-1 rounded-full">
-                                Adaptive Threat Radar
+                    <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-md hover:shadow-xl transition-all h-full relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-3xl rounded-full group-hover:bg-indigo-500/20 transition-colors"></div>
+                        <div className="flex items-center justify-between mb-8 relative z-10">
+                            <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center border border-indigo-100">
+                                <Stethoscope className="w-7 h-7 text-indigo-600" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-widest bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200/50">
+                                Live Audio AI
                             </span>
                         </div>
-
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            <Link href="/dashboard/security/benchmark" className="group p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-rose-400 dark:hover:border-rose-500 transition-all hover:shadow-md">
-                                <div className="bg-rose-100 dark:bg-rose-500/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-rose-600 group-hover:text-white transition-colors text-rose-600 dark:text-rose-400">
-                                    <Activity className="w-6 h-6" />
-                                </div>
-                                <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">Identity Benchmark</h3>
-                                <p className="text-xs font-medium text-slate-500">Live test suite evaluating Auth, RBAC, and HIPAA compliance policies.</p>
+                        <div className="relative z-10">
+                            <h2 className="text-2xl font-black text-slate-900 mb-2">Encounter Agent</h2>
+                            <p className="text-sm font-medium text-slate-500 leading-relaxed mb-8">
+                                Split-screen telehealth with real-time transcription. Auto-generates compliant SOAP notes and suggests ICD-10/CPT codes on the fly.
+                            </p>
+                            <Link href="/dashboard/encounter/sj-8921-a" className="inline-flex items-center justify-center w-full gap-2 px-6 py-3.5 bg-slate-900 hover:bg-black text-white text-sm font-bold rounded-xl transition-colors shadow-sm">
+                                <Video className="w-4 h-4" />
+                                Open Telehealth Simulator
                             </Link>
-
-                            <Link href="/dashboard/security/audits" className="group p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-orange-400 dark:hover:border-orange-500 transition-all hover:shadow-md">
-                                <div className="bg-orange-100 dark:bg-orange-500/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-600 group-hover:text-white transition-colors text-orange-600 dark:text-orange-400">
-                                    <Lock className="w-6 h-6" />
-                                </div>
-                                <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">Threat Remediation</h3>
-                                <p className="text-xs font-medium text-slate-500">Automated okta auto-fixes for detected misconfigurations and stale sessions.</p>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 dark:bg-rose-500/5 blur-3xl rounded-full"></div>
-                        <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-                            <FileText className="w-5 h-5 text-slate-500" />
-                            Live Matrix Telemetry
-                        </h2>
-
-                        <div className="space-y-4 relative z-10">
-                            {[
-                                { title: 'Auth Service', status: 'Optimal', load: '12ms ping', ok: true },
-                                { title: 'MCP Sandbox', status: 'Secured', load: '0 rogue queries', ok: true },
-                                { title: 'HIPAA Boundaries', status: 'Verified', load: 'AES-256 Active', ok: true }
-                            ].map((s, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
-                                    <div>
-                                        <p className="font-bold text-sm text-slate-800 dark:text-slate-200">{s.title}</p>
-                                        <p className="text-xs font-medium text-slate-400">{s.load}</p>
-                                    </div>
-                                    <span className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/20 px-2 py-1 rounded">
-                                        {s.status}
-                                    </span>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 </div>
+
+                {/* Agent 3: Billing */}
+                <div className="flex flex-col gap-6">
+                    <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-md hover:shadow-xl transition-all h-full relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 blur-3xl rounded-full group-hover:bg-violet-500/20 transition-colors"></div>
+                        <div className="flex items-center justify-between mb-8 relative z-10">
+                            <div className="w-14 h-14 bg-violet-50 rounded-2xl flex items-center justify-center border border-violet-100">
+                                <DollarSign className="w-7 h-7 text-violet-600" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-widest bg-violet-100 text-violet-700 px-3 py-1.5 rounded-full border border-violet-200/50">
+                                Predictive Denial
+                            </span>
+                        </div>
+                        <div className="relative z-10">
+                            <h2 className="text-2xl font-black text-slate-900 mb-2">Billing Agent</h2>
+                            <p className="text-sm font-medium text-slate-500 leading-relaxed mb-8">
+                                Claims scrubbing against UHC, Aetna, and BCBS rule engines. Predicts denials before 837 submission and auto-applies NCCI modifier fixes.
+                            </p>
+                            <Link href="/dashboard/billing" className="inline-flex items-center justify-center w-full gap-2 px-6 py-3.5 bg-slate-900 hover:bg-black text-white text-sm font-bold rounded-xl transition-colors shadow-sm">
+                                <BrainCircuit className="w-4 h-4" />
+                                Enter Revenue Pipeline
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     )

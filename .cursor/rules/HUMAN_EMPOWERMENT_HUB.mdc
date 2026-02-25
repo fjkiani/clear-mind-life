@@ -1,0 +1,77 @@
+---
+description: Clear Mind Life Human Empowerment Hub Doctrine — The architecture and component breakdown for the integrated Learning Hub and Biller Bounty system.
+---
+
+# 🧠 HUMAN EMPOWERMENT HUB & BOUNTY NETWORK DOCTRINE
+
+> **One-liner**: We are not replacing medical billers. We are arming them with the "Iron Man Suit" of AI orchestration, elevating them from data-entry clerks to autonomous Protocol Engineers, and connecting them to an internal gig-economy Bounty Network for scale.
+
+---
+
+## 1. ARCHITECTURE PHILOSOPHY
+
+The Human Empowerment Hub is a dedicated sub-application within the main provider dashboard. It is **not** a monolith. It is composed of highly modular, reusable components spread across multiple routes to prevent bloat and maintain a clean UX.
+
+The core principle: **Ascension over Automation.** The UI must gamify trust in the AI, moving the user through distinct levels of operational capability.
+
+---
+
+## 2. ROUTING & PAGE STRUCTURE
+
+The Hub lives under the `/dashboard/hub/` route namespace.
+
+*   `/dashboard/hub` — The main overview dashboard (Current Level, Active Bounties, AI Trust Score).
+*   `/dashboard/hub/learning` — The academy. Training modules on how to cross-reference AI staging against source EHR notes.
+*   `/dashboard/hub/protocols` — The engineering deck. Where Level 2/3 users write custom logic rules (e.g., "If Payer=Aetna, require Modifier 59").
+*   `/dashboard/hub/bounties` — The gig-economy marketplace for overflow claims.
+
+---
+
+## 3. CORE COMPONENT LIBRARY (`components/hub/*`)
+
+These components must be built as lean, reusable units.
+
+### The Ascension Indicators
+*   `LevelBadge.tsx`: A visual indicator of the user's current status (`Reviewer` [L1], `Pilot` [L2], `Protocol Engineer` [L3]).
+*   `XPBar.tsx`: A gamified progress bar showing claims cleared, rules written, and bounties claimed to unlock the next tier.
+
+### The Learning & Trust Components
+*   `AITrustScoreCard.tsx`: A daily metric showing the AI's first-pass accuracy rate. Builds psychological trust.
+*   `GlassBoxAlert.tsx`: A reusable alert banner that explains *why* the AI flagged a claim (e.g., "Medicare NCD 150.3 conflict detected"). No black boxes.
+*   `DualPaneReviewer.tsx`: A split-screen layout component used for both training and live review. Left side = Source EHR note. Right side = AI Staged 837 Claim.
+
+### The Protocol Engineering Components (Level 2/3)
+*   `LogicGateBuilder.tsx`: A visual, no-code rule builder. Allows billers to construct `IF [Payer] AND [Condition] THEN [Action]` rules without writing SQL or JSON.
+*   `RuleImpactSimulator.tsx`: Before saving a rule, this component runs it against the last 30 days of claims to show the "Predicted Impact" (e.g., "This rule would have flagged 42 claims").
+
+### The Bounty Network Components
+*   `BountyBoard.tsx`: A Kanban-style or list-view board showing available overflow batches. Includes filters for Payer, Specialty, and Complexity.
+*   `BountyCard.tsx`: A single Bounty listing. Must display: Batch Size (e.g., 50 Claims), Reward ($150), and Expiry Time.
+*   `BountyWallet.tsx`: A financial dashboard component showing earned bounties, pending payouts, and historical earnings.
+
+---
+
+## 4. BACKEND INFRASTRUCTURE (`app/api/hub/*`)
+
+*   `GET /api/hub/user-level`: Fetches the current user's ascension tier and XP.
+*   `POST /api/hub/protocols/create`: Saves a user-generated logic gate to the database.
+*   `GET /api/hub/bounties/available`: Streams live, available overflow batches to the Bounty Board.
+*   `POST /api/hub/bounties/claim`: Locks a bounty batch to a specific user to prevent duplicate work.
+*   `POST /api/hub/bounties/complete`: Validates the cleared batch and triggers the payout logic.
+
+---
+
+## 5. UI/UX DESIGN DIRECTIVES
+
+*   **Dark Mode Native:** The Bounty and Protocol pages should lean into the "Command Center" aesthetic (dark mode default, neon accents). It should feel like high-level orchestration, not data entry.
+*   **"One-Click" Interactions:** In the `DualPaneReviewer`, approving a staging or claiming a bounty should be a massive, satisfying swipe or single-click action.
+*   **Micro-animations:** Earning a bounty or leveling up to "Pilot" should trigger subtle but rewarding animations (e.g., glowing borders, confetti bursts).
+
+---
+
+## 6. MVP BUILD SEQUENCE
+
+1.  **Phase 1: The Shell & Routing:** Set up the `/dashboard/hub/*` routes and the global Hub navigation sidebar.
+2.  **Phase 2: The Leveling System:** Implement `LevelBadge` and `XPBar` with a mock backend.
+3.  **Phase 3: The Protocol Builder:** Build the no-code `LogicGateBuilder` for custom payer rules.
+4.  **Phase 4: The Bounty Board:** Implement the marketplace UI (`BountyBoard`, `BountyCard`) showing mock overflow batches.

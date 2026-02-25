@@ -1,24 +1,13 @@
 import Link from "next/link";
 import PageIllustration from "@/components/page-illustration";
+import { CheckCircle2, Shield, Activity, ArrowRight, BrainCircuit, Users, Stethoscope, Building2, Lock, Receipt } from "lucide-react";
 
 export const metadata = {
   title: "Who We Serve - Clear Mind Life",
-  description: "How Clear Mind Life eradicates administrative bottlenecks for Clinical Directors, Operations Managers, and Security Leaders.",
+  description: "How Clear Mind Life eradicates administrative bottlenecks for Clinical Directors, Operations Managers, Medical Billers, and CISOs.",
 };
 
 export default function Customers() {
-  const checkIconLight = (
-    <svg className="mr-3 mt-1 h-4 w-4 shrink-0 fill-current text-blue-600" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-    </svg>
-  );
-
-  const checkIconDark = (
-    <svg className="mr-3 mt-1 h-4 w-4 shrink-0 fill-current text-teal-400" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-    </svg>
-  );
-
   return (
     <section className="relative min-h-screen bg-gray-50 pb-24 pt-32 md:pt-40 font-inter">
       <PageIllustration />
@@ -70,21 +59,21 @@ export default function Customers() {
                   Our architecture listens to the telehealth session via WebRTC and dynamically builds structured clinical documents. It doesn't just transcribe; it comprehends.
                 </p>
               </div>
-              <ul className="space-y-4 text-gray-700 mb-10 pb-6 border-b border-gray-100">
-                <li className="flex items-start">
-                  {checkIconLight}
+              <ul className="space-y-4 text-gray-700 mb-10 pb-6 border-b border-gray-100 font-medium">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <span>Extracts the Chief Complaint and History of Present Illness (HPI).</span>
                 </li>
-                <li className="flex items-start">
-                  {checkIconLight}
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <span>Cross-references transcripts to validate precise ICD-10 nomenclature.</span>
                 </li>
-                <li className="flex items-start">
-                  {checkIconLight}
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <span>Natively maps extracted entities to FHIR R4 standard resources.</span>
                 </li>
-                <li className="flex items-start">
-                  {checkIconLight}
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <span className="font-bold text-gray-900">Doctors go home on time.</span>
                 </li>
               </ul>
@@ -113,21 +102,21 @@ export default function Customers() {
                   Our Receptionist agent intercepts scheduling requests natively, executing complex verification API calls before a human ever touches the record.
                 </p>
               </div>
-              <ul className="space-y-4 text-blue-50 mb-10 pb-6 border-b border-blue-700/50 relative z-10">
-                <li className="flex items-start">
-                  {checkIconDark}
+              <ul className="space-y-4 text-blue-50 mb-10 pb-6 border-b border-blue-700/50 relative z-10 font-medium">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
                   <span className="font-medium text-white">Executes live X12 270/271 EDI inquiries.</span>
                 </li>
-                <li className="flex items-start">
-                  {checkIconDark}
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
                   <span>Determines active medical coverage and specific co-pays instantly.</span>
                 </li>
-                <li className="flex items-start">
-                  {checkIconDark}
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
                   <span>Pre-fills the complex HL7 prior authorization pipelines autonomously.</span>
                 </li>
-                <li className="flex items-start">
-                  {checkIconDark}
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
                   <span className="font-bold text-teal-300">Balances the provider schedule with zero human touch.</span>
                 </li>
               </ul>
@@ -186,29 +175,21 @@ export default function Customers() {
                   Our network does not rely on static passwords. We deploy a continuous, multi-vector validation engine that treats every API call as inherently hostile until proven otherwise.
                 </p>
               </div>
-              <ul className="space-y-4 text-gray-300 mb-10 pb-6 border-b border-gray-800">
-                <li className="flex items-start">
-                  <svg className="mr-3 mt-1 h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-                  </svg>
+              <ul className="space-y-4 text-gray-300 mb-10 pb-6 border-b border-gray-800 font-medium">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <span>Analyzes real-time behavioral baselines (device fingerprinting, IP entropy).</span>
                 </li>
-                <li className="flex items-start">
-                  <svg className="mr-3 mt-1 h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-                  </svg>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <span>Automatically neutralizes MFA fatigue and prompt bombing attacks.</span>
                 </li>
-                <li className="flex items-start">
-                  <svg className="mr-3 mt-1 h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-                  </svg>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <span className="text-white font-medium">Blocks mass-assignment and complex RBAC escalation vectors.</span>
                 </li>
-                <li className="flex items-start">
-                  <svg className="mr-3 mt-1 h-4 w-4 shrink-0 fill-current text-rose-500" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-                  </svg>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <span className="font-bold text-rose-400">Enforces strict, local PHI-scrubbing before LLM routing.</span>
                 </li>
               </ul>
@@ -220,6 +201,62 @@ export default function Customers() {
                   View Universal Benchmark Matrix
                 </Link>
               </div>
+            </div>
+          </div>
+
+          {/* Persona 4: Medical Billers (Human Empowerment) */}
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* The Architecture (Left) */}
+            <div className="order-2 md:order-1 relative flex h-full flex-col rounded-3xl bg-indigo-50 p-8 md:p-10 shadow-xl border border-indigo-100">
+              <div className="absolute top-0 right-0 py-1.5 px-4 bg-indigo-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-bl-2xl rounded-tr-3xl shadow-sm">
+                The Solution
+              </div>
+              <div className="mb-6 relative z-10">
+                <div className="text-xl font-bold text-indigo-900 mb-2">The AI Workbench & Bounty Hub</div>
+                <div className="text-sm font-black text-indigo-500 uppercase tracking-wider mb-6">10x Biller Output</div>
+                <p className="text-indigo-900/80 mb-8 leading-relaxed font-medium">
+                  We don't replace billers; we arm them with guided intelligence. The engine drafts the 837, flags the missing modifiers, and presents a one-click fix.
+                </p>
+              </div>
+              <ul className="space-y-4 text-indigo-900 mb-10 pb-6 border-b border-indigo-200 relative z-10 font-medium">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                  <span className="font-medium text-indigo-950">Review and approve AI-staged claims 5x faster.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                  <span>Predictive denial scoring catches the typo before the clearinghouse does.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                  <span className="font-bold text-indigo-700">Access the Learning Hub to upskill on complex payer policies.</span>
+                </li>
+              </ul>
+              <div className="mt-auto relative z-10 flex gap-4">
+                <Link
+                  className="flex-1 text-center btn rounded-xl bg-indigo-600 text-white py-4 hover:bg-indigo-700 transition-colors font-bold shadow-md"
+                  href="/train"
+                >
+                  The Training Hub
+                </Link>
+              </div>
+            </div>
+
+            {/* The Status Quo */}
+            <div className="order-1 md:order-2 md:pl-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl shadow-inner border border-indigo-200">
+                  <Users className="w-7 h-7" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900">Medical Billers & Analysts</h2>
+              </div>
+              <h3 className="text-xl font-bold text-indigo-600 mb-4 border-l-4 border-indigo-500 pl-4 py-1">The High-Volume Trap</h3>
+              <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                Billers are expected to memorize thousands of payer-specific rules and constantly cross-reference LCD/NCD policies across multiple browser tabs. It is an impossible retention task.
+              </p>
+              <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                Instead of forcing skilled human billers to do repetitive copy-pasting, we elevate them to <strong>Reviewers and Protocol Engineers</strong>. By giving them the Clear Mind engine, they can clear backlogs autonomously or even participate in our remote bounty network.
+              </p>
             </div>
           </div>
 
@@ -242,6 +279,6 @@ export default function Customers() {
         </div>
 
       </div>
-    </section>
+    </section >
   );
 }

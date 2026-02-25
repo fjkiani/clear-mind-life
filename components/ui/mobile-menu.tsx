@@ -96,11 +96,38 @@ export default function MobileMenu() {
           <ul className="p-2 text-sm">
             <li>
               <Link
-                href="/pricing"
+                href="/platform"
+                className="flex rounded-lg px-2 py-1.5 font-semibold text-gray-900 hover:bg-gray-100"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Platform
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/doctrine"
                 className="flex rounded-lg px-2 py-1.5 text-gray-700 hover:bg-gray-100"
                 onClick={() => setMobileNavOpen(false)}
               >
-                Pricing
+                Doctrine
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/train"
+                className="flex rounded-lg px-2 py-1.5 text-gray-700 hover:bg-gray-100"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Train
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/compare"
+                className="flex rounded-lg px-2 py-1.5 font-bold text-indigo-600 hover:bg-gray-100"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Moat
               </Link>
             </li>
             <li>
@@ -110,6 +137,16 @@ export default function MobileMenu() {
                 onClick={() => setMobileNavOpen(false)}
               >
                 Customers
+              </Link>
+            </li>
+            <li className="my-1 border-t border-gray-100"></li>
+            <li>
+              <Link
+                href="/pricing"
+                className="flex rounded-lg px-2 py-1.5 text-gray-700 hover:bg-gray-100"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Pricing
               </Link>
             </li>
             <li>
@@ -130,22 +167,21 @@ export default function MobileMenu() {
                 Docs
               </Link>
             </li>
-            <li>
+            <li className="my-1 border-t border-gray-100"></li>
+            <li className="flex gap-2 px-2 pt-2">
               <Link
-                href="/support"
-                className="flex rounded-lg px-2 py-1.5 text-gray-700 hover:bg-gray-100"
+                href="/dashboard"
+                className="flex-1 text-center rounded-lg py-2 text-sm font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 transition"
                 onClick={() => setMobileNavOpen(false)}
               >
-                Support center
+                View Demo
               </Link>
-            </li>
-            <li>
               <Link
-                href="/apps"
-                className="flex rounded-lg px-2 py-1.5 text-gray-700 hover:bg-gray-100"
+                href="/signup"
+                className="flex-1 text-center rounded-lg py-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 transition"
                 onClick={() => setMobileNavOpen(false)}
               >
-                Apps
+                Sign Up
               </Link>
             </li>
           </ul>
