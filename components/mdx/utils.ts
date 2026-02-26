@@ -8,6 +8,7 @@ type Metadata = {
   summary?: string;
   author?: string;
   authorImg?: string;
+  image?: string;
   kind?: string;
 };
 

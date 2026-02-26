@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "./logo";
+import { Activity, ShieldCheck } from "lucide-react";
 
 export default function Footer({ border = false }: { border?: boolean }) {
   return (
@@ -10,7 +11,7 @@ export default function Footer({ border = false }: { border?: boolean }) {
           className={`grid gap-10 py-8 sm:grid-cols-12 md:py-12 ${border ? "border-t [border-image:linear-gradient(to_right,transparent,theme(colors.slate.200),transparent)1]" : ""}`}
         >
           {/* 1st block */}
-          <div className="space-y-2 sm:col-span-12 lg:col-span-4">
+          <div className="space-y-2 sm:col-span-12 lg:col-span-3">
             <div>
               <Logo />
             </div>
@@ -20,7 +21,7 @@ export default function Footer({ border = false }: { border?: boolean }) {
           </div>
 
           {/* 2nd block */}
-          <div className="space-y-2 sm:col-span-6 md:col-span-3 lg:col-span-4">
+          <div className="space-y-2 sm:col-span-6 md:col-span-3 lg:col-span-2">
             <h3 className="text-sm font-medium">Platform</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -51,7 +52,7 @@ export default function Footer({ border = false }: { border?: boolean }) {
           </div>
 
           {/* 3rd block */}
-          <div className="space-y-2 sm:col-span-6 md:col-span-3 lg:col-span-4">
+          <div className="space-y-2 sm:col-span-6 md:col-span-3 lg:col-span-2">
             <h3 className="text-sm font-medium">Resources</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -79,6 +80,21 @@ export default function Footer({ border = false }: { border?: boolean }) {
                 </Link>
               </li>
             </ul>
+          </div>
+
+          {/* 4th block: Security & Compliance */}
+          <div className="space-y-4 sm:col-span-12 md:col-span-6 lg:col-span-5 flex flex-col items-start lg:items-end w-full">
+            <h3 className="text-sm font-medium">Trust & Security</h3>
+            <div className="flex gap-4">
+              <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl bg-gray-50 flex-1 justify-center whitespace-nowrap shadow-sm hover:shadow transition-shadow">
+                <ShieldCheck className="w-5 h-5 text-gray-700 shrink-0" />
+                <span className="text-xs font-bold text-gray-700 tracking-wide">SOC 2 Type II</span>
+              </div>
+              <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl bg-gray-50 flex-1 justify-center whitespace-nowrap shadow-sm hover:shadow transition-shadow">
+                <Activity className="w-5 h-5 text-gray-700 shrink-0" />
+                <span className="text-xs font-bold text-gray-700 tracking-wide">HIPAA Compliant</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

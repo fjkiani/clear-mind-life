@@ -1,0 +1,103 @@
+---
+title: Resume Targeting Master File
+description: Canonical resume ammunition for Fahad Kiani. Source bullets mapped to company-specific variants. Use this file as the single source of truth when drafting applications.
+---
+
+# Resume Targeting: Master Reference
+
+## 🧱 Source Bullets (Raw Accomplishments — The Scaffolding)
+
+These are the canonical, proof-backed achievements. Every targeted variant must trace back to one of these.
+
+```
+[S1] Pioneering AI Agent Certification — engineering 40+ MCP servers and 105+ adversarial tasks via Python, FastAPI, and Docker, detecting 6 production failure classes. EU AI Act compliant.
+
+[S2] Engineer automated CI/CD pipelines using RLFM to deploy Claude-powered MCP servers — managing 26 production environments with 100% parity for real-time benchmarking scale.
+
+[S3] Driving 93.3% clinical accuracy — automating HIPAA-compliant agentic triage via FHIR R4, HL7, and Graph-Science — engineered 8-hour rapid deployment for real-time clinical operations.
+
+[S4] Published Cancer Immunology Research 2025 (Kiani, Nayeem) — deploying Evo2, FastAPI, Modal, AlphaFold; zero-shot pathogenicity; building agentic in silico therapeutic validation. AACR B025.
+```
+
+---
+
+## 🔐 Target: OKTA (Solutions Engineer)
+
+### Role Signal
+- Pre-sales SE: translate Okta's identity platform to complex enterprise use cases
+- Keywords: OAuth 2.0, SAML, OIDC, RBAC, Zero Trust, SSO, POC delivery, customer-facing
+- Differentiator hook: Most SE candidates talk about configuring identity. You *built* an identity layer for AI agents — a frontier problem Okta hasn't solved yet.
+
+### Tailored Bullets
+
+> **Lead bullet — this is the hook:**
+> Architected a Zero-Trust Identity Agent Hub governing autonomous AI agents across 26 production environments — enforcing dynamic OAuth 2.0 token scoping, RBAC boundaries, and continuous PHI scrubbing at the tool-invocation layer, directly addressing enterprise AI security gaps Okta has yet to productize.
+
+> **Second bullet — scale and rigor:**
+> Engineered 40+ MCP server integrations and 105+ adversarial certification tasks (Python, FastAPI, Docker) — including OIDC/JWT boundary tests, role-escalation probes, and IDOR simulations — detecting 6 production security failure classes aligned with NIST and EU AI Act standards.
+
+> **Third bullet — real-world customer analogy (pre-sales framing):**
+> Drove 93.3% clinical accuracy for a HIPAA-compliant agentic triage pipeline integrated with FHIR R4 and HL7 — deploying in 8 hours with zero hardware rip-and-replace, demonstrating POC-to-production velocity directly applicable to Okta implementation cycles.
+
+> **Fourth bullet — research credibility:**
+> Published 2025 cancer immunology research (AACR B025) deploying Evo2 + AlphaFold via FastAPI and Modal — demonstrating ability to translate deep technical complexity into production-grade engineering for high-stakes decision systems.
+
+### Okta Cover Letter Hook (1 Paragraph)
+> Okta has solved human identity. The next decade belongs to *agentic identity* — governing the AI agents now flooding enterprise systems. My work at Clear Mind Life put me at the center of this problem: I built the Identity Agent Hub, a Zero-Trust orchestration layer that intercepts AI tool calls, requests dynamically scoped OAuth 2.0 tokens, and enforces RBAC in real-time across 26 production environments. I did not just consume an identity platform; I engineered one from scratch to solve a problem legacy IAM cannot handle. I want to bring that builder's instinct to Okta's Solutions Engineering team and help your largest customers architect their AI-era identity strategy.
+
+---
+
+## 🎙️ Target: ASSEMBLY AI (Solutions Engineer / SE)
+
+### Role Signal
+- Customer-facing SE for a Speech AI / ASR / NLP API company
+- Keywords: streaming STT, async transcription, WebSocket APIs, diarization, LeMUR, custom vocab, SDK troubleshooting, POC delivery, developer advocacy
+- Differentiator hook: You already *productized* AssemblyAI's output — the Encounter Agent uses ambient voice transcription to auto-generate SOAP notes. You are their ideal customer AND their best advocate.
+
+### Tailored Bullets
+
+> **Lead bullet — this is the hook:**
+> Productized real-time ambient voice transcription into a clinical AI pipeline — leveraging streaming STT (Assembly AI-compatible architecture) to auto-generate HIPAA-compliant SOAP notes from provider-patient encounters, achieving 93.3% clinical accuracy and eliminating 2+ hours of daily physician documentation.
+
+> **Second bullet — technical depth & POC credibility:**
+> Engineered 40+ MCP server API integrations and 105+ adversarial evaluation tasks (Python, FastAPI, Docker) — including real-time audio pipeline stress tests and NLP output accuracy benchmarks across 6 production failure classes — directly applicable to AssemblyAI's competitive evaluation and benchmark design workflows.
+
+> **Third bullet — CI/CD pipeline velocity:**
+> Automated CI/CD pipelines using RLFM to manage 26 production audio and data-processing environments with 100% parity — enabling real-time scale benchmarking; experienced in identifying SDK edge cases, error patterns, and root-cause engineering fixes shared upstream.
+
+> **Fourth bullet — research credibility + multimodal AI:**
+> Published 2025 cancer immunology research (AACR B025) using Evo2, AlphaFold, and FastAPI for zero-shot pathogenicity prediction — demonstrating the ability to push AI model outputs into production-grade, customer-facing pipelines in high-stakes scientific domains.
+
+### AssemblyAI Cover Letter Hook (1 Paragraph)
+> I didn't just integrate a speech-to-text API — I built a clinical AI pipeline around it. The Encounter Agent I engineered uses real-time ambient voice transcription to auto-generate SOAP notes and ICD-10/CPT codes during live provider-patient encounters, cutting physician documentation to a single approval tap. I understand AssemblyAI's product not from the outside, but from the perspective of someone who put it at the core of a production healthcare system. As a Solutions Engineer, I want to help every AssemblyAI customer reach that same "aha moment" — where real-time speech intelligence stops being a demo and starts being the operational backbone of their product.
+
+---
+
+## 🏗️ Platform Stack — The Moat (Reference These Throughout)
+
+Use this section to pull authentic technical proof points into any bullet or POC description.
+
+| Layer | Technology |
+|---|---|
+| **AI / LLM** | Claude (Anthropic), OpenAI, Evo2, AlphaFold |
+| **Orchestration** | MCP (Model Context Protocol), RLFM, LangChain |
+| **Identity / Security** | OAuth 2.0 Token Exchange, RBAC, JWT, PHI Scrubbing, Zero-Trust |
+| **Clinical Data** | FHIR R4, HL7 v2, X12 EDI (270/271, 837/835) |
+| **Speech / NLP** | AssemblyAI-compatible STT, ambient voice transcription, SOAP generation |
+| **Backend** | Python, FastAPI, Docker, Modal |
+| **Frontend** | Next.js 14 (App Router), TypeScript, React 18, Tailwind CSS, Framer Motion |
+| **DevOps** | CI/CD pipelines, 26 production environments, 100% parity enforcement |
+| **Compliance** | EU AI Act, NIST, HIPAA, SOC 2 Type II, ISO |
+| **Research** | Evo2 (Arc Institute), AACR B025, Published 2025 |
+
+---
+
+## ✏️ Formatting Rules for Any New Target Company
+
+When adapting for a new company, use this template:
+
+1. **Lead bullet:** What *they care about most* — translated into YOUR proof. Use their product's language.
+2. **Second bullet:** Scale + rigor + adversarial depth (pull from S1 or S2).
+3. **Third bullet:** Deployment speed, POC-to-production credibility (pull from S3).
+4. **Fourth bullet:** Research / credibility signal (pull from S4).
+5. **Cover Letter Hook:** One paragraph. Builder framing. Show you already solved the problem they sell.

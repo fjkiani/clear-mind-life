@@ -4,15 +4,28 @@ import Image from "next/image";
 export default function PostItem({ ...props }) {
   return (
     <article className="pl-6 sm:pl-10">
+      {props.metadata.image && (
+        <div className="mb-6 overflow-hidden rounded-2xl">
+          <Image
+            className="w-full object-cover transition-transform duration-700 hover:scale-105"
+            src={props.metadata.image}
+            width={800}
+            height={400}
+            alt={props.metadata.title}
+          />
+        </div>
+      )}
       <header className="mb-2">
         <div className="relative mb-2 flex items-center gap-2 before:absolute before:inset-y-0 before:-left-6 before:-ml-px before:w-px before:bg-blue-500 sm:before:-left-10">
-          <Image
-            className="rounded-full"
-            src={props.metadata.authorImg}
-            width="24"
-            height="24"
-            alt={props.metadata.author}
-          />
+          {props.metadata.authorImg && (
+            <Image
+              className="rounded-full"
+              src={props.metadata.authorImg}
+              width="24"
+              height="24"
+              alt={props.metadata.author}
+            />
+          )}
           <div className="text-sm text-gray-500">{props.metadata.author}</div>
         </div>
         <h2 className="text-2xl font-bold">

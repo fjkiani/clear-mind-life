@@ -74,6 +74,17 @@ export default async function SinglePost({
                   </div>
                 </div>
               </header>
+              {post.metadata.image && (
+                <figure className="mb-10 overflow-hidden rounded-3xl">
+                  <img
+                    className="w-full object-cover"
+                    src={post.metadata.image}
+                    width={1024}
+                    height={576}
+                    alt={post.metadata.title}
+                  />
+                </figure>
+              )}
               <div className="prose prose-lg max-w-none text-gray-700 prose-headings:scroll-mt-24 prose-headings:font-bold prose-headings:text-gray-900 prose-a:font-medium prose-a:text-blue-500 prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-2 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:font-medium prose-blockquote:italic prose-blockquote:text-gray-900 prose-strong:font-medium prose-strong:text-gray-900 prose-code:rounded prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:font-mono prose-code:text-gray-900 prose-code:before:content-[''] prose-code:after:content-[''] prose-pre:border prose-pre:border-gray-700 prose-pre:bg-gray-900 prose-blockquote:xl:-ml-4">
                 <CustomMDX source={post.content} />
               </div>

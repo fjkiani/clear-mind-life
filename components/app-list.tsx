@@ -3,12 +3,12 @@ import IntegrationImg01 from "@/public/images/integration-01.svg";
 import IntegrationImg02 from "@/public/images/integration-02.svg";
 import IntegrationImg03 from "@/public/images/integration-03.svg";
 import IntegrationImg04 from "@/public/images/integration-04.svg";
-import IntegrationImg05 from "@/public/images/integration-05.svg";
-import IntegrationImg06 from "@/public/images/integration-06.svg";
-import IntegrationImg07 from "@/public/images/integration-07.svg";
-import IntegrationImg08 from "@/public/images/integration-08.svg";
-import IntegrationImg09 from "@/public/images/integration-09.svg";
-import IntegrationImg10 from "@/public/images/integration-10.svg";
+import NexhealthLogo from "@/public/images/nexhealth-logo.png";
+import TwilioLogo from "@/public/images/twilio-logo.png";
+import SendgridLogo from "@/public/images/sendgrid-logo.png";
+import StripeLogo from "@/public/images/stripe-logo.png";
+import OpenaiLogo from "@/public/images/openai-logo.png";
+import CohereLogo from "@/public/images/cohere-logo.png";
 import IntegrationImg11 from "@/public/images/integration-11.svg";
 import IntegrationImg12 from "@/public/images/integration-12.svg";
 import IntegrationImg13 from "@/public/images/integration-13.svg";
@@ -59,39 +59,39 @@ export default function AppList() {
     {
       name: "NexHealth",
       description: "Real-time bidirectional EHR syncing for patient appointments and clinical records via native MCP.",
-      image: IntegrationImg05,
+      image: NexhealthLogo,
       link: "#0",
     },
     {
       name: "Twilio",
       description: "HIPAA-compliant SMS and Voice orchestration for patient reminders and telehealth link distribution.",
-      image: IntegrationImg06,
+      image: TwilioLogo,
       link: "#0",
       badge: true,
     },
     {
       name: "SendGrid",
       description: "Encrypted email dispatch for discharge summaries and secure patient portal notifications.",
-      image: IntegrationImg07,
+      image: SendgridLogo,
       link: "#0",
     },
     {
       name: "Stripe",
       description: "Automated copay processing and claims revenue cycle tracking.",
-      image: IntegrationImg08,
+      image: StripeLogo,
       link: "#0",
     },
     {
       name: "OpenAI",
       description: "The ReAct reasoning core powering specialized clinical triage and identity threat detection.",
-      image: IntegrationImg09,
+      image: OpenaiLogo,
       link: "#0",
       badge: true,
     },
     {
       name: "Cohere",
       description: "Command R+ integration for high-performance clinical RAG and medical literature summarization.",
-      image: IntegrationImg10,
+      image: CohereLogo,
       link: "#0",
     },
   ];

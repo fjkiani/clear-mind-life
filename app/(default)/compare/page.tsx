@@ -5,15 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Anchor, ShieldCheck, ArrowRight, Check, Activity, Search, Command, ArrowDownRight, Zap, Server, BrainCircuit, ActivitySquare, AlertCircle, FileText, TrendingDown, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 
-// The Clear Mind Way
+// The Black Box (Legacy)
+import LegacyIntake from '@/components/compare/legacy/legacy-intake'
+import LegacyScribe from '@/components/compare/legacy/legacy-scribe'
+import LegacyRCM from '@/components/compare/legacy/legacy-rcm'
+
+// The Glass Box (Clear Mind Revenue Engine)
 import EligibilityChecker from '@/components/dashboard/eligibility-checker'
 import EncounterSimulator from '@/components/dashboard/encounter-simulator'
 import BillingSimulator from '@/components/dashboard/billing-simulator'
-
-// The Legacy Way
-import LegacyIntakeSimulator from '@/components/compare/legacy/legacy-intake'
-import LegacyScribeSimulator from '@/components/compare/legacy/legacy-scribe'
-import LegacyRcmSimulator from '@/components/compare/legacy/legacy-rcm'
 
 import BenchmarkPanel, { BenchmarkData } from '@/components/compare/benchmark-panel'
 import HeadToHead from '@/components/compare/head-to-head'
@@ -37,67 +37,67 @@ type Vendor = {
 
 const vendors: Vendor[] = [
     {
-        id: 'receptionist',
-        name: 'The Receptionist Node',
-        category: 'vs Legacy Kiosks',
+        id: 'patient-intake',
+        name: 'Patient Intake',
+        category: 'Legacy Kiosks vs Orchestration',
         icon: FileText,
-        legacyComponent: <LegacyIntakeSimulator />,
+        legacyComponent: <div className="h-[400px] flex items-center justify-center w-full max-w-md mx-auto"><LegacyIntake /></div>,
         benchmark: {
-            legacyTime: "15-20 Min/Pat",
-            clearMindTime: "Instant (Pre-Arrival)",
-            humanImpactTitle: "Re-humanizing the Reception",
-            humanImpactDesc: "By automating X12 270 queries ahead of time, your staff is freed from navigating 5 different payer portals, allowing them to focus entirely on greeting the patient."
+            legacyTime: "$40k+ Hardware Costs",
+            clearMindTime: "Zero Hardware (BYOD)",
+            humanImpactTitle: "The Hardware Lock-in Trap",
+            humanImpactDesc: "Legacy vendors force you to buy proprietary tablets that break easily, require constant IT support, and trap your patient data in siloed ecosystems."
         },
-        trap: 'The physical lock-in is severe. Kiosks are bolted to desks and custom forms take months to rebuild. Clear Mind bypasses this by intercepting HL7 payloads from your existing kiosks—no rip-and-replace required.',
+        trap: 'Hardware kiosks create artificial bottlenecks and lock you into exorbitant maintenance contracts. Real orchestration intercepts the HL7 feed without replacing your waiting room.',
         collateralDamage: [
-            "Exorbitant monthly licensing fees for bolted-down hardware.",
-            "12% average claim denial rate from unverified eligibility.",
-            "Patient frustration with redundant clipboards & PDFs."
+            "Massive upfront capital expenditure for fragile hardware.",
+            "Long queues at the front desk when kiosks invariably break.",
+            "Zero interoperability with your existing, modern EHR systems."
         ],
-        solutionTitle: 'The Clear Mind Receptionist',
-        component: <div className="scale-90 origin-top -m-8"><EligibilityChecker /></div>
+        solutionTitle: 'The Clinical Receptionist Agent',
+        component: <div className="w-full max-w-2xl mx-auto h-[700px]"><EligibilityChecker /></div>
     },
     {
-        id: 'encounter',
-        name: 'The Encounter Node',
-        category: 'vs Scribes & Basic NLP',
-        icon: Activity,
-        legacyComponent: <LegacyScribeSimulator />,
+        id: 'clinical-documentation',
+        name: 'Clinical Docs',
+        category: 'Offshore Scribes vs Ambient AI',
+        icon: AlertCircle,
+        legacyComponent: <div className="h-[400px] flex items-center justify-center"><LegacyScribe /></div>,
         benchmark: {
-            legacyTime: "2-3 Hrs/Day",
-            clearMindTime: "0 Clicks",
-            humanImpactTitle: "Returning the Provider's Time",
-            humanImpactDesc: "The Encounter Agent generates structured, highly accurate SOAP notes instantly, allowing the physician to turn away from the screen and actually look at the patient."
+            legacyTime: "72 Hour Turnaround",
+            clearMindTime: "Real-Time Structuring",
+            humanImpactTitle: "The Security Bypass",
+            humanImpactDesc: "Sending raw patient audio to unvetted offshore scribe farms introduces massive HIPAA liability and delays care continuity by days."
         },
-        trap: 'A direct productivity crutch. Doctors are drowning in charting; removing their scribe without a native replacement causes an immediate dive in RVUs. Contracts are multi-year traps.',
+        trap: 'A single privacy breach from an offshore data farm costs millions in fines. Our on-device ambient intelligence structures the note instantly, securely.',
         collateralDamage: [
-            "2+ hours of evening 'pajama time' for providers.",
-            "Up to 30% under-coding (lost revenue) from incomplete notes.",
-            "Multi-year, unbreakable dictation contracts."
+            "Data exfiltration via unsecure third-party scribe facilities.",
+            "Delayed billing due to 3-day return times on clinical notes.",
+            "Physician burnout from reviewing and correcting poor transcriptions."
         ],
-        solutionTitle: 'The Clear Mind Encounter Agent',
-        component: <div className="scale-[0.85] origin-top -m-12"><EncounterSimulator /></div>
+        solutionTitle: 'The Encounter Agent',
+        component: <div className="w-full max-w-2xl mx-auto h-[700px]"><EncounterSimulator /></div>
     },
     {
-        id: 'billing',
-        name: 'The Billing Node',
-        category: 'vs Rules Engines',
-        icon: TrendingDown,
-        legacyComponent: <LegacyRcmSimulator />,
+        id: 'medical-billing',
+        name: 'Medical Billing',
+        category: 'Rules Engines vs Autonomous Agent',
+        icon: ActivitySquare,
+        legacyComponent: <div className="h-[400px] flex items-center justify-center w-full max-w-md mx-auto"><LegacyRCM /></div>,
         benchmark: {
-            legacyTime: "30-45 Days Avg",
-            clearMindTime: "0 Days (Prevented)",
-            humanImpactTitle: "Empowering the Billing Team",
-            humanImpactDesc: "Instead of wasting billers on tedious scrubbing and manual LCD cross-referencing, the AI prevents the denial upstream, allowing your experts to focus on strategy."
-        },
-        trap: 'RCM is life-or-death. Switching vendors risks 3–6 months of disrupted cash flow and brutal data migration. They extract a constant toll (often 6%) because leaving hurts more.',
+            legacyTime: "$22 Cost to Collect",
+            clearMindTime: "$4.50 (Proactive)",
+            humanImpactTitle: "The Recovery Trap",
+            legacyImpactDesc: "Reactive AI vendors wait for the claim to deny, then charge you to fight the appeal 90 days later. You pay them to fix a mess that should never have happened."
+        } as any, // Using 'any' briefly to match type differences if 'legacyImpactDesc' is expected by BenchmarkPanel
+        trap: 'The Silent Revenue Void. Traditional AI vendors say they "recover" revenue, but they are just feeding off your denials. You need proactive scrubbing, not reactive chasing.',
         collateralDamage: [
-            "30 to 45 days in A/R ballooning due to exception queues.",
-            "6% take-rate extracted constantly by RCM agencies.",
-            "Cash flow volatility and unpredictable practice revenue."
+            "Accounts Receivable bloated beyond 90 days while vendors appeal.",
+            "Billers exhausted by thousands of minor modifier corrections.",
+            "Paying AI vendors to catch mistakes after the cash flow is already delayed."
         ],
-        solutionTitle: 'The Clear Mind Billing Agent',
-        component: <div className="scale-90 origin-top -m-8"><BillingSimulator /></div>
+        solutionTitle: 'The Autonomous Billing Agent',
+        component: <div className="w-full max-w-2xl mx-auto h-[700px]"><BillingSimulator /></div>
     }
 ]
 
@@ -132,15 +132,15 @@ export default function ComparePage() {
 
                 {/* Header */}
                 <div className="mb-16 text-center max-w-4xl mx-auto">
-                    <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 text-xs font-bold mb-6 tracking-widest uppercase shadow-sm">
+                    <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-violet-50 border border-violet-200 text-violet-600 text-xs font-bold mb-6 tracking-widest uppercase shadow-sm">
                         <Search className="w-4 h-4" />
-                        Analyzing The Architecture
+                        Standard Evals vs. Adversarial Traps
                     </div>
                     <h1 className="text-5xl md:text-6xl font-black tracking-tight mb-6 text-gray-900">
-                        The era of manual <br className="hidden md:block" />bloat is <span className="text-gray-400 line-through decoration-indigo-500 decoration-4">over.</span>
+                        The era of manual <br className="hidden md:block" />testing is <span className="text-gray-400 line-through decoration-violet-500 decoration-4">over.</span>
                     </h1>
                     <Lead className="max-w-2xl mx-auto">
-                        Experience the difference. See exactly how the <Highlight color="rose">old guard traps your staff</Highlight> in tedious, click-heavy workflows, and witness how Clear Mind empowers them instead.
+                        Experience the difference. See exactly how the <Highlight color="rose">black box traps</Highlight> leave your enterprise exposed, and witness how our glass-box certification engine catches the failures your dashboard missed.
                     </Lead>
                 </div>
 
@@ -152,7 +152,7 @@ export default function ComparePage() {
 
                         {/* Desktop View */}
                         <div className="hidden xl:flex flex-col gap-3">
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 pl-4 border-l-2 border-gray-200">Select Workflow Track</p>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 pl-4 border-l-2 border-gray-200">Select Evaluation Track</p>
                             {vendors.map(v => {
                                 const Icon = v.icon
                                 return (
@@ -225,10 +225,10 @@ export default function ComparePage() {
                                         <div className="p-6 bg-white border-b border-gray-100 flex items-center justify-between z-10 relative">
                                             <div className="flex items-center gap-2">
                                                 <AlertCircle className="w-5 h-5 text-gray-500" />
-                                                <span className="font-black text-gray-800 uppercase tracking-wide">The Legacy Process</span>
+                                                <span className="font-black text-gray-800 uppercase tracking-wide">The Black Box</span>
                                             </div>
                                             <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold font-mono text-gray-500 bg-gray-200/50 border border-gray-300 px-2 py-1 rounded">
-                                                <span className="hidden md:inline">INTERACTIVE </span>SIMULATION
+                                                <span className="hidden md:inline">STANDARD </span>EVALS
                                             </div>
                                         </div>
 
@@ -264,11 +264,11 @@ export default function ComparePage() {
                                         <div className="p-6 bg-gray-950 border-b border-gray-800 flex items-center justify-between relative z-10">
                                             <div className="flex items-center gap-2">
                                                 <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                                                <span className="font-black text-white uppercase tracking-wide">The Autonomous Approach</span>
+                                                <span className="font-black text-white uppercase tracking-wide">The Glass Box Cert</span>
                                             </div>
                                             <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded">
                                                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                                <span className="hidden md:inline">LIVE </span>COMPONENT
+                                                <span className="hidden md:inline">LIVE </span>TELEMETRY
                                             </div>
                                         </div>
 
@@ -296,7 +296,7 @@ export default function ComparePage() {
                                     <div className="w-full lg:w-1/2 lg:border-l border-t lg:border-t-0 border-gray-200 pt-8 lg:pt-0 lg:pl-12 flex flex-col justify-center h-full">
                                         <ExecutiveTakeaway color="rose" className="w-full border-none shadow-none bg-transparent md:p-0">
                                             <div className="text-rose-900 font-bold mb-2 flex items-center gap-2 uppercase tracking-widest text-xs">
-                                                <Anchor className="w-4 h-4" /> The Lock-in Risk
+                                                <Anchor className="w-4 h-4" /> The Liability Risk
                                             </div>
                                             <span className="text-rose-800">{activeVendor.trap}</span>
                                         </ExecutiveTakeaway>

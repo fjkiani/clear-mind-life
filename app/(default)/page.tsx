@@ -32,7 +32,7 @@ export default function Home() {
             </span>
           </h1>
           <Lead className="max-w-3xl mx-auto mb-12">
-            Medical practices lose <Highlight color="rose">20% of their revenue</Highlight> to denied claims, opaque insurance verification, and physician burnout. We don't sell another point solution that traps your data. Clear Mind Life operates as a <Highlight color="indigo">Universal Orchestration Layer</Highlight> to stop the bleeding and put your staff back in command. High reward, zero lock-in.
+            Medical practices lose <Highlight color="rose">20% of their revenue</Highlight> to denied claims, opaque insurance verification, and physician burnout. We don't sell another point solution that traps your data. Clear Mind Life operates as a <Highlight color="indigo">Universal Orchestration Layer</Highlight> to stop the bleeding and put your staff back in command. <Highlight color="emerald">Live in 14 days. No hardware rip-and-replace.</Highlight>
           </Lead>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -72,9 +72,9 @@ export default function Home() {
                 <span className="text-gray-500 text-sm font-medium">First-Pass Denial Rate</span>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-gray-400 text-sm font-bold uppercase tracking-wider">Time Recovered</span>
-                <span className="text-3xl font-black text-sky-400">2,500</span>
-                <span className="text-gray-500 text-sm font-medium">Hours/Year Saved</span>
+                <span className="text-gray-400 text-sm font-bold uppercase tracking-wider">Cost to Collect</span>
+                <span className="text-3xl font-black text-sky-400">$4.50</span>
+                <span className="text-gray-500 text-sm font-medium">per claim (vs $22 avg)</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-gray-400 text-sm font-bold uppercase tracking-wider">Net Recovered</span>
@@ -88,19 +88,52 @@ export default function Home() {
 
       {/* ── The Revenue Cycle Black Hole Teaser ── */}
       <section className="py-16 px-6 bg-white border-y border-gray-100">
-        <div className="max-w-4xl mx-auto text-center flex flex-col md:flex-row items-center justify-between gap-8 bg-gray-50 p-8 rounded-3xl border border-gray-200 shadow-sm">
-          <div className="text-left">
-            <h2 className="text-2xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight">The Revenue Cycle Black Hole</h2>
-            <p className="text-lg text-gray-600 font-medium tracking-tight">
-              A typical practice leaks <Highlight color="rose">$250K–$500K a year</Highlight> across 4 critical breakpoints.
-            </p>
+        <div className="max-w-5xl mx-auto flex flex-col gap-8">
+          <div className="text-center flex flex-col md:flex-row items-center justify-between gap-8 bg-gray-50 p-8 rounded-3xl border border-gray-200 shadow-sm">
+            <div className="text-left">
+              <h2 className="text-2xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight">The Revenue Cycle Black Hole</h2>
+              <p className="text-lg text-gray-600 font-medium tracking-tight">
+                A typical practice leaks <Highlight color="rose">$250K–$500K a year</Highlight> across 4 critical breakpoints.
+              </p>
+            </div>
+            <Link
+              href="/doctrine"
+              className="shrink-0 px-6 py-3 rounded-xl border-2 border-gray-900 text-gray-900 font-bold hover:bg-gray-900 hover:text-white transition-colors flex items-center gap-2"
+            >
+              Read the Doctrine <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
-          <Link
-            href="/doctrine"
-            className="shrink-0 px-6 py-3 rounded-xl border-2 border-gray-900 text-gray-900 font-bold hover:bg-gray-900 hover:text-white transition-colors flex items-center gap-2"
-          >
-            Read the Doctrine <ArrowRight className="w-4 h-4" />
-          </Link>
+
+          {/* Differentiator Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-rose-50 border border-rose-200 rounded-3xl p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 blur-3xl rounded-full"></div>
+              <div className="flex items-center gap-3 mb-6 relative z-10">
+                <span className="w-8 h-8 rounded-full bg-rose-200 flex items-center justify-center text-rose-700 font-black">X</span>
+                <h3 className="text-xl font-bold text-gray-900">Reactive AI Vendors</h3>
+              </div>
+              <p className="text-gray-600 font-medium mb-6 relative z-10">Wait for the claim to deny, pay human reviewers, appeal 90 days later.</p>
+              <div className="flex items-center justify-between bg-white/60 p-4 rounded-xl border border-rose-100 relative z-10">
+                <span className="text-sm font-bold text-gray-500">Cost to Collect</span>
+                <span className="text-xl font-black text-gray-900">$22.00</span>
+              </div>
+            </div>
+            <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-8 relative overflow-hidden ring-2 ring-emerald-500/20 shadow-xl shadow-emerald-500/5">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 blur-3xl rounded-full"></div>
+              <div className="flex items-center gap-3 mb-6 relative z-10">
+                <span className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-black">✓</span>
+                <h3 className="text-xl font-bold text-gray-900">Clear Mind Life</h3>
+              </div>
+              <p className="text-gray-600 font-medium mb-6 relative z-10">Pre-scrub via ML, auto-fix NCCI errors, submit clean claims 100% of the time.</p>
+              <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-emerald-200 shadow-sm relative z-10">
+                <span className="text-sm font-bold text-gray-500">Cost to Collect</span>
+                <span className="text-2xl font-black text-emerald-600">$4.50</span>
+              </div>
+              <div className="inline-block mt-6 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold shrink-0 relative z-10 border border-emerald-200">
+                We prevent what others force you to recover.
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -132,19 +165,22 @@ export default function Home() {
             {/* Agent 1: Receptionist */}
             <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 pb-16 border-b border-gray-100 relative">
               <div className="w-full md:w-1/2 rounded-3xl bg-gray-50 border border-gray-200 shadow-2xl p-8 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4">
+                <div className="absolute top-0 right-0 p-4 flex gap-2 items-center">
+                  <span className="px-2 py-1 bg-white border border-gray-200 text-gray-900 text-[10px] font-black tracking-widest rounded shadow-sm">NEXHEALTH</span>
+                  <span className="px-2 py-1 bg-white border border-gray-200 text-gray-900 text-[10px] font-black tracking-widest rounded shadow-sm">TWILIO</span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-100/50 border border-blue-200 text-blue-800 text-xs font-mono font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                     Terminal Mode
                   </span>
                 </div>
-                <div className="font-mono text-sm text-gray-600 mt-6 space-y-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                <div className="font-mono text-sm text-gray-600 mt-10 space-y-2 opacity-80 group-hover:opacity-100 transition-opacity">
                   <p className="text-violet-600 font-bold">$ RUN X12_270_ELIGIBILITY_REQUEST</p>
                   <p className="text-gray-400 truncate">ISA*00*          *00*          *ZZ*AV09311993     *ZZ*PAYERID        *260224*1435*^*00501*000000001*0*P*:</p>
                   <p className="text-gray-400 truncate">GS*HS*AV09311993*PAYERID*20260224*1435*1*X*005010X279A1</p>
                   <p className="text-gray-400 mt-4">... AWAITING 271 RESPONSE ...</p>
                   <p className="text-emerald-600 font-bold">$ PATIENT_COVERAGE_VERIFIED : TRUE</p>
                   <p className="text-emerald-600 font-bold">$ COPAY_CALCULATED : $25.00</p>
+                  <p className="text-blue-500 font-bold">$ TWILIO_DISPATCH : SECURE_PAYMENT_LINK</p>
                 </div>
                 <div className="mt-8 bg-white rounded-xl p-6 border border-gray-100 shadow-sm relative z-10 translate-y-4 group-hover:-translate-y-2 transition-transform duration-500">
                   <div className="flex items-center justify-between mb-4">
@@ -172,12 +208,12 @@ export default function Home() {
                 <h3 className="text-3xl font-black text-gray-900 tracking-tight">The Front-Desk Receptionist</h3>
                 <p className="text-lg text-gray-600 leading-relaxed font-medium">
                   Eliminates the #1 reason for denied claims: **Insurance Eligibility Errors**.
-                  Before the patient even arrives, the Receptionist Agent executes a live X12 270/271 EDI exchange with the clearinghouse.
+                  Before the patient even arrives, the Receptionist Agent utilizes **NexHealth** to read bi-directional scheduling data, executes a live X12 270/271 EDI exchange, and dispatches a secure **Twilio** SMS token for pre-visit payment.
                 </p>
 
                 <div className="my-6">
                   <ExecutiveTakeaway color="emerald">
-                    The Receptionist Agent interfaces directly with your existing kiosks and clearinghouse APIs. <span className="underline decoration-emerald-400 decoration-2 underline-offset-4 font-bold">No new hardware, just instant capability upgrades.</span>
+                    Unlike dinosaur PM systems that rely on phone tag and clipboards, our agent interfaces directly with your EHR via federated identity. <span className="underline decoration-emerald-400 decoration-2 underline-offset-4 font-bold">No master credentials stored. No new hardware.</span>
                   </ExecutiveTakeaway>
                 </div>
 
@@ -213,7 +249,7 @@ export default function Home() {
                     <div className="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></div>
                     <span className="text-white text-sm font-bold">Telehealth Transcript: Live</span>
                   </div>
-                  <span className="text-gray-400 text-xs font-mono">ASSEMBLY_AI :: ACTIVE</span>
+                  <span className="px-2 py-1 bg-white text-gray-900 text-[10px] font-black tracking-widest rounded shadow-[0_0_15px_rgba(255,255,255,0.3)]">ASSEMBLYAI</span>
                 </div>
                 <div className="space-y-4 mb-8 h-32 overflow-hidden relative">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900 z-10 pointer-events-none"></div>
@@ -245,12 +281,12 @@ export default function Home() {
                 <h3 className="text-3xl font-black text-gray-900 tracking-tight">The Post-Visit Analyzer</h3>
                 <p className="text-lg text-gray-600 leading-relaxed font-medium">
                   Returns 2 hours back to every provider, every day.
-                  The agent listens to the encounter, constructs the full SOAP note, and automatically maps clinical context to accurate ICD-10 and CPT codes.
+                  Powered by **AssemblyAI**, the agent listens ambiently, constructs the full SOAP note, and automatically maps clinical context to accurate ICD-10 and CPT codes.
                 </p>
 
                 <div className="my-6">
                   <ExecutiveTakeaway color="violet">
-                    Providers don't change their workflow. <span className="underline decoration-violet-400 decoration-2 underline-offset-4 font-bold">The agent ambiently structures the note and maps the FHIR payload silently to your EHR.</span>
+                    Legacy scribes and basic dictation tools hoard your data. <span className="underline decoration-violet-400 decoration-2 underline-offset-4 font-bold">We enforce a strict Zero-Data Retention policy. Audio is ephemeral; only the FHIR payload survives.</span>
                   </ExecutiveTakeaway>
                 </div>
 
@@ -281,7 +317,10 @@ export default function Home() {
             <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 pb-16 relative">
               <div className="w-full md:w-1/2 rounded-3xl bg-gray-50 border border-gray-200 shadow-2xl p-8 relative overflow-hidden group">
                 <div className="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
-                  <h4 className="font-black text-gray-900 tracking-wider uppercase text-sm">Claims Scrubbing Queue</h4>
+                  <div className="flex items-center gap-3">
+                    <h4 className="font-black text-gray-900 tracking-wider uppercase text-sm">Claims Scrubbing Queue</h4>
+                    <span className="px-2 py-1 bg-white border border-gray-200 text-gray-900 text-[10px] font-black tracking-widest rounded shadow-sm">STRIPE</span>
+                  </div>
                   <span className="px-3 py-1 rounded-full bg-gray-900 text-white text-xs font-bold">22 Ready</span>
                 </div>
                 <div className="space-y-4">
@@ -324,12 +363,12 @@ export default function Home() {
                 </div>
                 <h3 className="text-3xl font-black text-gray-900 tracking-tight">The Claims Intelligence Agent</h3>
                 <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                  Stops denials *before* they happen. The agent simulates payer adjudication on every X12 837 claim, utilizing an ML model trained on millions of historical denials to flag and auto-correct errors.
+                  Reactive denial management is dead. The Claims agent simulates payer adjudication on every X12 837 claim *before* it leaves your facility, utilizing an ML model trained on millions of historical denials to flag and auto-correct errors.
                 </p>
 
                 <div className="my-6">
                   <ExecutiveTakeaway color="emerald">
-                    By simulating payer adjudication prior to submission, we prevent the denial from ever occurring, <span className="underline decoration-emerald-400 decoration-2 underline-offset-4 font-bold">fundamentally shifting from reactive to proactive.</span>
+                    Dinosaurs wait 90 days for a denial, then charge you $22/claim to appeal it. <span className="underline decoration-emerald-400 decoration-2 underline-offset-4 font-bold">By proactively scrubbing pre-submission, we push your cost-to-collect down to $4.50.</span>
                   </ExecutiveTakeaway>
                 </div>
 
