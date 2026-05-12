@@ -1,8 +1,11 @@
 "use client";
-/** TokenGenerator - Handle token generation for video participants */
+/**
+ * TokenGenerator - Handle token generation for video participants
+ * Fixed: hardcoded localhost:8001 → process.env.NEXT_PUBLIC_API_URL
+ */
 import { useState } from 'react';
 
-const API_BASE = 'http://localhost:8001';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
 export function TokenGenerator({
   roomId,
@@ -10,7 +13,7 @@ export function TokenGenerator({
   role = 'participant',
   onTokenGenerated,
   label = 'Generate Token',
-  className = ''
+  className = '',
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -31,8 +34,8 @@ export function TokenGenerator({
         body: JSON.stringify({
           room_id: roomId,
           participant_name: participantName,
-          participant_role: role
-        })
+          participant_role: role,
+        }),
       });
 
       if (!response.ok) {

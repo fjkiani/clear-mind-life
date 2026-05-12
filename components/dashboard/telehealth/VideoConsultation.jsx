@@ -1,31 +1,27 @@
 "use client";
-/** VideoConsultation - Complete telehealth session with embedded player and auto-transcription */
+/**
+ * VideoConsultation - Complete telehealth session with embedded player and auto-transcription
+ * Fixed: hardcoded localhost:8001 → process.env.NEXT_PUBLIC_API_URL
+ */
 import { useState } from 'react';
 import { VideoRoom } from './VideoRoom';
 import { TokenGenerator } from './TokenGenerator';
 import { AIConsultationReport } from './AIConsultationReport';
 
-const API_BASE = 'http://localhost:8001';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
 export default function VideoConsultation() {
-  // Room creation state
   const [formData, setFormData] = useState({ patientId: '', providerId: '', appointmentId: '' });
   const [roomData, setRoomData] = useState(null);
   const [roomLoading, setRoomLoading] = useState(false);
   const [roomError, setRoomError] = useState(null);
 
-  // Token state
   const [patientToken, setPatientToken] = useState(null);
   const [providerToken, setProviderToken] = useState(null);
 
-  // Recording state
-  const [recordingId, setRecordingId] = useState(null);
-
-  // Transcription state
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [transcriptionData, setTranscriptionData] = useState(null);
 
-  // Create video room
   const handleCreateRoom = async (e) => {
     e.preventDefault();
     setRoomLoading(true);
@@ -33,13 +29,13 @@ export default function VideoConsultation() {
     setRoomData(null);
     setPatientToken(null);
     setProviderToken(null);
-    setTranscriptionData(null); // Clear transcription data on new room creation
+    setTranscriptionData(null);
 
     try {
       const response = await fetch(`${API_BASE}/api/v1/demo/healthcare/create-video-room`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
@@ -56,37 +52,26 @@ export default function VideoConsultation() {
     }
   };
 
-  // Handle recording stopped - auto-transcribe
   const handleRecordingStopped = async (recordingUrl, stoppedRecordingId) => {
     if (!roomData || !stoppedRecordingId) return;
 
     setIsTranscribing(true);
     try {
-      const token = localStorage.getItem('token');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
       const response = await fetch(`${API_BASE}/api/v1/video/transcribe-recording`, {
         method: 'POST',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           room_id: roomData.room_id,
-          recording_id: stoppedRecordingId
-        })
+          recording_id: stoppedRecordingId,
+          recording_url: recordingUrl || undefined,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to transcribe recording');
-      }
+      if (!response.ok) throw new Error('Failed to transcribe recording');
 
       const data = await response.json();
-      // Assuming the API returns a 'success' field and 'ai_analysis'
       if (data.success) {
         setTranscriptionData(data);
-      } else {
-        console.error("Transcription failed:", data.message);
       }
     } catch (err) {
       console.error('Transcription error:', err);
@@ -97,7 +82,8 @@ export default function VideoConsultation() {
 
   return (
     <div className="space-y-6 w-full max-w-6xl mx-auto h-[calc(100vh-160px)] overflow-y-auto pr-4 pb-12 custom-scrollbar">
-      {/* Guided Context Setup */}
+
+      {/* Pre-session context banner */}
       {!roomData && (
         <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 md:p-8 shadow-sm mb-6">
           <div className="flex items-center gap-3 mb-4">
@@ -118,7 +104,7 @@ export default function VideoConsultation() {
             <p>
               Upon initiating the secure video session below, the <strong>Clear Mind Life LLM Co-Pilot</strong> will activate in the background.
               It will transcribe the clinical encounter in real-time, synthesize a SOAP note, extract ICD-10 billing codes,
-              and draft follow-up care instructions—bridging the entire flow from initial AI chat to post-visit resolution.
+              and draft follow-up care instructions — bridging the entire flow from initial AI chat to post-visit resolution.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -182,7 +168,7 @@ export default function VideoConsultation() {
         </form>
       </div>
 
-      {/* Error Display */}
+      {/* Error */}
       {roomError && (
         <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
           <div className="text-red-700 font-bold flex items-center gap-3">
@@ -191,7 +177,7 @@ export default function VideoConsultation() {
         </div>
       )}
 
-      {/* Video Consultation Session */}
+      {/* Active Session */}
       {roomData && roomData.success && (
         <div className="space-y-6">
           <div className="bg-green-50 border border-green-200 rounded-2xl p-5 flex items-center justify-between shadow-sm">
@@ -200,6 +186,9 @@ export default function VideoConsultation() {
                 <span className="text-xl">✅</span> Secure Room Initialized
               </p>
               <p className="text-sm font-medium opacity-80">Room ID: {roomData.room_id}</p>
+              {roomData.demo_mode && (
+                <p className="text-xs text-green-600 mt-1">Demo mode — mock video stream active</p>
+              )}
             </div>
             <div className="animate-pulse w-3 h-3 bg-green-500 rounded-full"></div>
           </div>
@@ -236,7 +225,6 @@ export default function VideoConsultation() {
                 )}
               </div>
 
-              {/* Patient Context Dashboard */}
               <div className="mt-4 pt-4 border-t border-gray-100 hidden sm:block">
                 <h4 className="text-sm font-bold text-gray-900 mb-2 flex items-center gap-2"><span>📱</span> Patient Intake Summary</h4>
                 <div className="bg-gray-50 rounded-xl p-3 text-sm text-gray-700 border border-gray-100">
@@ -282,7 +270,6 @@ export default function VideoConsultation() {
                 )}
               </div>
 
-              {/* Provider Context Dashboard */}
               <div className="mt-4 pt-4 border-t border-gray-100 hidden sm:block">
                 <h4 className="text-sm font-bold text-gray-900 mb-2 flex items-center gap-2"><span>⚡</span> Agentic Co-Pilot Ops</h4>
                 <div className="grid grid-cols-2 gap-3">

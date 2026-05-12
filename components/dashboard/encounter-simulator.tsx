@@ -2,347 +2,327 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Video, Mic, Edit3, ShieldAlert, CheckCircle2, Search, Zap, Activity } from 'lucide-react'
+import { Video, Mic, Edit3, ShieldAlert, CheckCircle2, Search, Zap, Activity, RefreshCw } from 'lucide-react'
 
-type TranscriptLine = { speaker: 'Doctor' | 'Patient'; text: string; time: number; highlight?: boolean; isKeyword?: boolean }
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'
+
+type TranscriptLine = {
+  speaker: 'Doctor' | 'Patient'
+  text: string
+  time: number
+  highlight?: boolean
+  isKeyword?: boolean
+}
+
+interface SOAPNote {
+  subjective: string
+  objective: string
+  assessment: string
+  plan: string
+  icd10_codes: string[]
+  cpt_codes: string[]
+  safety_flags: string[]
+}
+
+const FULL_CONVERSATION: TranscriptLine[] = [
+  { speaker: 'Doctor', text: "Hi Sarah, it's Dr. Chen. How are you feeling today?", time: 0 },
+  { speaker: 'Patient', text: "Not great, honestly. My lower back has been killing me.", time: 2000 },
+  { speaker: 'Doctor', text: "I'm sorry to hear that. How long has the pain been going on?", time: 4000 },
+  { speaker: 'Patient', text: "About two weeks. It's mostly a dull ache, but if I bend over it shoots down my left leg.", time: 6000, highlight: true },
+  { speaker: 'Doctor', text: "Shooting down the leg. Does the pain reach past your knee?", time: 9000 },
+  { speaker: 'Patient', text: "Yes, all the way to my calf sometimes. And yesterday I had some numbness in my foot.", time: 11000, highlight: true },
+  { speaker: 'Doctor', text: "Any weakness in the leg? Or loss of bowel or bladder control?", time: 14000 },
+  { speaker: 'Patient', text: "No weakness, and no issues like that.", time: 17000 },
+  { speaker: 'Doctor', text: "Okay. And just to check, have you had any chest pain or difficulty breathing?", time: 19000 },
+  { speaker: 'Patient', text: "Actually, yes. Last night I had sudden chest pain that wouldn't go away.", time: 22000, isKeyword: true },
+  { speaker: 'Doctor', text: "Sarah, are you having any chest pain right now?", time: 25000 },
+  { speaker: 'Patient', text: "A little bit, yeah. It feels tight.", time: 27000 },
+  { speaker: 'Doctor', text: "Alright, because of the chest pain, I want you to go to the emergency room immediately to get an EKG.", time: 30000 },
+]
 
 export default function EncounterSimulator() {
-    const [callActive, setCallActive] = useState(false)
-    const [callEnded, setCallEnded] = useState(false)
-    const [transcript, setTranscript] = useState<TranscriptLine[]>([])
-    const [soapStatus, setSoapStatus] = useState<'idle' | 'generating' | 'ready'>('idle')
-    const [currentLineIndex, setCurrentLineIndex] = useState(0)
-    const [safetyTriggered, setSafetyTriggered] = useState(false)
-    const transcriptEndRef = useRef<HTMLDivElement>(null)
+  const [callActive, setCallActive] = useState(false)
+  const [callEnded, setCallEnded] = useState(false)
+  const [transcript, setTranscript] = useState<TranscriptLine[]>([])
+  const [soapStatus, setSoapStatus] = useState<'idle' | 'generating' | 'ready'>('idle')
+  const [soapNote, setSoapNote] = useState<SOAPNote | null>(null)
+  const [currentLineIndex, setCurrentLineIndex] = useState(0)
+  const [safetyTriggered, setSafetyTriggered] = useState(false)
+  const [soapError, setSoapError] = useState<string | null>(null)
+  const transcriptEndRef = useRef<HTMLDivElement>(null)
 
-    const fullConversation: TranscriptLine[] = [
-        { speaker: 'Doctor', text: "Hi Sarah, it's Dr. Chen. How are you feeling today?", time: 0 },
-        { speaker: 'Patient', text: "Not great, honestly. My lower back has been killing me.", time: 2000 },
-        { speaker: 'Doctor', text: "I'm sorry to hear that. How long has the pain been going on?", time: 4000 },
-        { speaker: 'Patient', text: "About two weeks. It's mostly a dull ache, but if I bend over it shoots down my left leg.", time: 6000, highlight: true },
-        { speaker: 'Doctor', text: "Shooting down the leg. Does the pain reach past your knee?", time: 9000 },
-        { speaker: 'Patient', text: "Yes, all the way to my calf sometimes. And yesterday I had some numbness in my foot.", time: 11000, highlight: true },
-        { speaker: 'Doctor', text: "Any weakness in the leg? Or loss of bowel or bladder control?", time: 14000 },
-        { speaker: 'Patient', text: "No weakness, and no issues like that.", time: 17000 },
-        { speaker: 'Doctor', text: "Okay. And just to check, have you had any chest pain or difficulty breathing?", time: 19000 },
-        { speaker: 'Patient', text: "Actually, yes. Last night I had sudden chest pain that wouldn't go away.", time: 22000, isKeyword: true },
-        { speaker: 'Doctor', text: "Sarah, are you having any chest pain right now?", time: 25000 },
-        { speaker: 'Patient', text: "A little bit, yeah. It feels tight.", time: 27000 },
-        { speaker: 'Doctor', text: "Alright, because of the chest pain, I want you to go to the emergency room immediately to get an EKG.", time: 30000 },
-    ]
+  useEffect(() => {
+    transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [transcript])
 
-    useEffect(() => {
-        if (transcriptEndRef.current) {
-            transcriptEndRef.current.scrollIntoView({ behavior: 'smooth' })
-        }
-    }, [transcript])
-
-    useEffect(() => {
-        let timeout: NodeJS.Timeout
-        if (callActive && currentLineIndex < fullConversation.length) {
-            const line = fullConversation[currentLineIndex]
-
-            // Trigger safety alert on specific keyword
-            if (line.isKeyword) {
-                setSafetyTriggered(true)
-            }
-
-            timeout = setTimeout(() => {
-                setTranscript(prev => [...prev, line])
-                setCurrentLineIndex(prev => prev + 1)
-            }, currentLineIndex === 0 ? 500 : 2500) // Simulated pacing
-        } else if (callActive && currentLineIndex >= fullConversation.length) {
-            endCall()
-        }
-        return () => clearTimeout(timeout)
-    }, [callActive, currentLineIndex])
-
-    const startCall = () => {
-        setCallActive(true)
-        setCallEnded(false)
-        setTranscript([])
-        setCurrentLineIndex(0)
-        setSoapStatus('idle')
-        setSafetyTriggered(false)
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
+    if (callActive && currentLineIndex < FULL_CONVERSATION.length) {
+      const line = FULL_CONVERSATION[currentLineIndex]
+      if (line.isKeyword) setSafetyTriggered(true)
+      timeout = setTimeout(() => {
+        setTranscript(prev => [...prev, line])
+        setCurrentLineIndex(prev => prev + 1)
+      }, currentLineIndex === 0 ? 500 : 2500)
+    } else if (callActive && currentLineIndex >= FULL_CONVERSATION.length) {
+      endCall()
     }
+    return () => clearTimeout(timeout)
+  }, [callActive, currentLineIndex])
 
-    const endCall = () => {
-        setCallActive(false)
-        setCallEnded(true)
-        setSoapStatus('generating')
+  const startCall = () => {
+    setCallActive(true)
+    setCallEnded(false)
+    setTranscript([])
+    setCurrentLineIndex(0)
+    setSoapStatus('idle')
+    setSoapNote(null)
+    setSafetyTriggered(false)
+    setSoapError(null)
+  }
 
-        // Simulate AI Generation time
-        setTimeout(() => {
-            setSoapStatus('ready')
-        }, 2500)
+  const endCall = async () => {
+    setCallActive(false)
+    setCallEnded(true)
+    setSoapStatus('generating')
+    setSoapError(null)
+
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/encounter/generate-note`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transcript: FULL_CONVERSATION.map(l => ({ speaker: l.speaker, text: l.text })),
+          patient_name: 'Sarah Johnson',
+          provider_name: 'Dr. Mei-Ling Chen',
+        }),
+      })
+
+      if (!res.ok) throw new Error('SOAP generation failed')
+      const data = await res.json()
+      setSoapNote(data.soap_note)
+      setSoapStatus('ready')
+    } catch (err: any) {
+      setSoapError(err.message)
+      // Fallback to hardcoded SOAP note
+      setSoapNote({
+        subjective: "Patient reports 2-week history of lower back pain with left-sided radiation to calf and foot numbness. Denies bowel/bladder dysfunction. Discloses acute chest tightness onset last evening.",
+        objective: "Telehealth encounter. Neurological and cardiac exams deferred pending ED evaluation.",
+        assessment: "1. Lumbar radiculopathy, left L4-L5 distribution. 2. Acute chest pain — cardiac etiology must be excluded.",
+        plan: "1. STAT ED referral for EKG and troponin. 2. Lumbar MRI pending cardiac clearance. 3. Follow-up in 48 hours.",
+        icd10_codes: ["M54.42", "G57.20", "R07.9"],
+        cpt_codes: ["99214"],
+        safety_flags: ["Chest pain disclosed during encounter — emergency escalation triggered."],
+      })
+      setSoapStatus('ready')
     }
+  }
 
-    return (
-        <div className="w-full max-w-6xl mx-auto p-6">
+  return (
+    <div className="w-full p-6">
+      <div className="grid lg:grid-cols-2 gap-8">
 
-            {/* Header */}
-            <div className="mb-8 flex items-center justify-between">
+        {/* Left: Live Transcript */}
+        <div className="flex flex-col gap-4">
+          {/* Call Controls */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`w-3 h-3 rounded-full ${callActive ? 'bg-red-500 animate-pulse' : callEnded ? 'bg-gray-400' : 'bg-gray-300'}`}></div>
+              <span className="text-sm font-bold text-gray-700">
+                {callActive ? 'Live Encounter' : callEnded ? 'Encounter Complete' : 'Ready'}
+              </span>
+            </div>
+            <div className="flex gap-2">
+              {!callActive && !callEnded && (
+                <button
+                  onClick={startCall}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-black transition-colors shadow-sm"
+                >
+                  <Video className="w-4 h-4" /> Start Encounter
+                </button>
+              )}
+              {callActive && (
+                <button
+                  onClick={endCall}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-sm"
+                >
+                  End Call
+                </button>
+              )}
+              {callEnded && (
+                <button
+                  onClick={startCall}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+                >
+                  <RefreshCw className="w-4 h-4" /> Replay
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Safety Alert */}
+          <AnimatePresence>
+            {safetyTriggered && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3"
+              >
+                <ShieldAlert className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Mic className="w-6 h-6 text-violet-600" />
-                        Autonomous Encounter Engine
-                    </h2>
-                    <p className="text-gray-500 mt-1">Live Telehealth Transcription & One-Tap SOAP Generation</p>
+                  <p className="font-bold text-red-800 text-sm">Safety Escalation Triggered</p>
+                  <p className="text-xs text-red-700 mt-0.5">
+                    Keyword detected: <strong>"chest pain"</strong> — Emergency protocol activated. Notifying on-call staff.
+                  </p>
                 </div>
-                <div className="flex gap-2">
-                    <span className="px-3 py-1 rounded bg-violet-100 text-violet-700 text-xs font-bold uppercase tracking-wider">AssemblyAI</span>
-                    <span className="px-3 py-1 rounded bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider">Cohere Command R+</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Transcript Feed */}
+          <div className="bg-gray-950 rounded-2xl border border-gray-800 p-4 min-h-[320px] max-h-[400px] overflow-y-auto space-y-3">
+            {transcript.length === 0 && (
+              <p className="text-gray-600 text-xs font-mono">Awaiting encounter start...</p>
+            )}
+            {transcript.map((line, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: line.speaker === 'Doctor' ? -8 : 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                className={`flex gap-3 ${line.speaker === 'Patient' ? 'flex-row-reverse' : ''}`}
+              >
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                  line.speaker === 'Doctor' ? 'bg-violet-600 text-white' : 'bg-emerald-600 text-white'
+                }`}>
+                  {line.speaker === 'Doctor' ? 'Dr' : 'Pt'}
                 </div>
+                <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
+                  line.isKeyword
+                    ? 'bg-red-900/60 text-red-200 border border-red-700'
+                    : line.highlight
+                    ? 'bg-amber-900/40 text-amber-200 border border-amber-700/50'
+                    : line.speaker === 'Doctor'
+                    ? 'bg-gray-800 text-gray-200'
+                    : 'bg-gray-700 text-gray-100'
+                }`}>
+                  <p className="text-[10px] font-bold opacity-60 mb-0.5">{line.speaker}</p>
+                  <p>{line.text}</p>
+                  {line.isKeyword && (
+                    <p className="text-[10px] text-red-400 font-bold mt-1 flex items-center gap-1">
+                      <ShieldAlert className="w-3 h-3" /> SAFETY FLAG DETECTED
+                    </p>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+            <div ref={transcriptEndRef} />
+          </div>
+
+          {/* Progress */}
+          {callActive && (
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-gray-100 rounded-full h-1.5">
+                <motion.div
+                  className="bg-violet-500 h-1.5 rounded-full"
+                  animate={{ width: `${(currentLineIndex / FULL_CONVERSATION.length) * 100}%` }}
+                  transition={{ duration: 0.3 }}
+                />
+              </div>
+              <span className="text-xs text-gray-500 font-mono">{currentLineIndex}/{FULL_CONVERSATION.length}</span>
             </div>
-
-            {/* Safety Alert Banner */}
-            <AnimatePresence>
-                {safetyTriggered && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-6 bg-rose-600 rounded-xl p-4 shadow-lg shadow-rose-600/20 flex items-center justify-between border border-rose-500"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0">
-                                <ShieldAlert className="w-7 h-7 text-rose-600" />
-                            </div>
-                            <div>
-                                <h4 className="text-white font-black uppercase tracking-widest text-sm mb-1">Safety Protocol Triggered</h4>
-                                <p className="text-rose-100 font-medium">Critical phrase detected: <span className="text-white font-bold bg-rose-700/50 px-2 py-0.5 rounded">sudden chest pain</span>. Recommended action: Immediate ER escalation.</p>
-                            </div>
-                        </div>
-                        <button className="px-6 py-2 bg-white text-rose-600 hover:bg-rose-50 rounded-lg font-bold text-sm transition-colors uppercase tracking-wider shadow-sm">
-                            Acknowledge
-                        </button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <div className="grid lg:grid-cols-12 gap-6">
-
-                {/* Left Column: Video & Telemetry (5 cols) */}
-                <div className="lg:col-span-5 flex flex-col gap-6">
-
-                    {/* Simulated Video SDK */}
-                    <div className="bg-gray-900 rounded-3xl overflow-hidden aspect-video relative shadow-xl border border-gray-800">
-                        {!callActive && !callEnded ? (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 p-6 text-center">
-                                <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20">
-                                    <Video className="w-10 h-10 text-blue-400" />
-                                </div>
-                                <h3 className="text-white font-bold text-xl mb-2">Patient Waiting in Lobby</h3>
-                                <p className="text-gray-400 mb-8">Sarah Johnson • 2:30 PM Appt</p>
-                                <button
-                                    onClick={startCall}
-                                    className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-lg flex items-center gap-2"
-                                >
-                                    <Video className="w-5 h-5" />
-                                    Admit & Start Call
-                                </button>
-                            </div>
-                        ) : callActive ? (
-                            <div className="absolute inset-0 bg-gray-800 relative">
-                                <div className="absolute inset-0 opacity-40 mix-blend-overlay">
-                                    {/* Simulated video noise/texture */}
-                                    <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                                        <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" /></filter>
-                                        <rect width="100%" height="100%" filter="url(#noise)" />
-                                    </svg>
-                                </div>
-                                {/* Patient PIP */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-32 h-32 rounded-full bg-gray-700 border-4 border-gray-600 flex items-center justify-center overflow-hidden">
-                                        <span className="text-4xl text-gray-500 font-bold">SJ</span>
-                                    </div>
-                                </div>
-                                {/* Provider PIP (small corner) */}
-                                <div className="absolute bottom-4 right-4 w-24 h-32 bg-gray-700 border-2 border-gray-600 rounded-xl flex items-center justify-center shadow-lg">
-                                    <span className="text-2xl text-gray-500 font-bold">Dr. C</span>
-                                </div>
-                                {/* Controls */}
-                                <div className="absolute bottom-4 left-4 flex gap-2">
-                                    <button onClick={endCall} className="px-4 py-2 bg-rose-600 text-white text-xs font-bold rounded-lg shadow-lg uppercase tracking-wider">End Call</button>
-                                </div>
-                                <div className="absolute top-4 left-4 flex gap-2 items-center px-3 py-1 bg-red-500/80 backdrop-blur-sm rounded-full border border-red-400">
-                                    <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                                    <span className="text-white text-xs font-bold">REC</span>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 border-t-4 border-emerald-500">
-                                <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4">
-                                    <CheckCircle2 className="w-8 h-8 text-emerald-500" />
-                                </div>
-                                <h3 className="text-white font-bold text-lg">Call Ended</h3>
-                                <p className="text-gray-400 text-sm mt-1">Duration: 12m 45s</p>
-                                <button onClick={startCall} className="mt-6 text-sm text-gray-500 hover:text-white transition-colors">Restart Simulation</button>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Live Transcript Panel */}
-                    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm flex flex-col h-[400px]">
-                        <div className="bg-gray-50 border-b border-gray-200 p-4 rounded-t-3xl flex justify-between items-center">
-                            <h3 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
-                                <Mic className="w-4 h-4 text-violet-600" />
-                                Live Transcript
-                            </h3>
-                            {callActive && (
-                                <span className="flex items-center gap-1.5 text-xs font-semibold text-violet-600 bg-violet-100 px-2.5 py-1 rounded-full animate-pulse">
-                                    <Activity className="w-3 h-3" /> Listening
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex-grow p-4 overflow-y-auto bg-[#fafafa]">
-                            <div className="space-y-4">
-                                <AnimatePresence>
-                                    {transcript.map((line, i) => (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            key={i}
-                                            className={`flex flex-col ${line.speaker === 'Doctor' ? 'items-end' : 'items-start'}`}
-                                        >
-                                            <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 ${line.speaker === 'Doctor' ? 'text-blue-500' : 'text-gray-400'}`}>
-                                                {line.speaker}
-                                            </span>
-                                            <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm ${line.speaker === 'Doctor'
-                                                ? 'bg-blue-600 text-white rounded-tr-sm shadow-sm'
-                                                : line.isKeyword
-                                                    ? 'bg-rose-100 text-rose-900 border border-rose-200 rounded-tl-sm font-medium shadow-sm'
-                                                    : 'bg-white border border-gray-200 text-gray-700 rounded-tl-sm shadow-sm'
-                                                }`}>
-                                                {line.highlight ? (
-                                                    <span className="relative">
-                                                        {line.text}
-                                                        <span className="absolute -bottom-1 left-0 w-full h-[3px] bg-violet-400/30 rounded"></span>
-                                                    </span>
-                                                ) : (
-                                                    line.text
-                                                )}
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </AnimatePresence>
-                                <div ref={transcriptEndRef} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Column: AI SOAP Note & Coding (7 cols) */}
-                <div className="lg:col-span-7 flex flex-col">
-                    <div className="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden flex-grow flex flex-col relative">
-
-                        <div className="bg-gray-900 px-6 py-5 flex justify-between items-center">
-                            <h3 className="font-bold text-white flex items-center gap-2">
-                                <Zap className="w-5 h-5 text-emerald-400" />
-                                Auto-Generated Narrative
-                            </h3>
-                            {soapStatus === 'idle' && (
-                                <span className="px-3 py-1 bg-gray-800 text-gray-400 text-xs font-mono rounded border border-gray-700">AWAITING_ENCOUNTER</span>
-                            )}
-                            {soapStatus === 'generating' && (
-                                <span className="px-3 py-1 bg-violet-900/50 text-violet-300 border border-violet-500/30 text-xs font-mono rounded flex items-center gap-2">
-                                    <Activity className="w-3 h-3 animate-spin" /> SYNTHESIZING_FHIR_NOTE
-                                </span>
-                            )}
-                            {soapStatus === 'ready' && (
-                                <span className="px-3 py-1 bg-emerald-900/50 text-emerald-300 border border-emerald-500/30 text-xs font-bold rounded flex items-center gap-1.5 uppercase tracking-wider">
-                                    <CheckCircle2 className="w-3.5 h-3.5" /> Ready for Signature
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="p-8 flex-grow bg-gray-50 flex flex-col">
-                            {soapStatus === 'idle' ? (
-                                <div className="flex-grow flex flex-col items-center justify-center text-gray-400 space-y-4 opacity-50">
-                                    <Edit3 className="w-16 h-16" />
-                                    <p className="max-w-xs text-center text-sm font-medium">The Analyzer Agent builds the structured note automatically as the visit progresses.</p>
-                                </div>
-                            ) : soapStatus === 'generating' ? (
-                                <div className="flex-grow flex flex-col items-center justify-center space-y-6">
-                                    <div className="w-16 h-16 border-4 border-gray-200 border-t-violet-600 rounded-full animate-spin"></div>
-                                    <div className="text-center">
-                                        <p className="text-gray-900 font-bold mb-1">Mapping Clinical Ontology...</p>
-                                        <p className="text-gray-500 text-xs font-mono">Extracting Symptoms → SNOMED CT → ICD-10</p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.98 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="flex flex-col h-full bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
-                                >
-                                    {/* Editor Draft Area */}
-                                    <div className="flex-grow p-6 space-y-6 overflow-y-auto">
-                                        <div>
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 border-b border-gray-100 pb-1">Subjective</h4>
-                                            <p className="text-sm text-gray-800 leading-relaxed font-medium">
-                                                Patient is a 45-year-old female presenting with lower back pain of two weeks duration. Pain is described as a dull ache that transitions to a sharp, shooting pain down the left leg (radiating to the calf) upon bending. Patient also reports an incident of sudden, tight chest pain occurring last night and persisting mildly today. Denies leg weakness or bowel/bladder incontinence.
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 border-b border-gray-100 pb-1">Objective</h4>
-                                            <p className="text-sm text-gray-800 leading-relaxed font-medium italic">
-                                                Pending in-person evaluation. Patient triaged to ER for cardiac workup due to active chest pain.
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 border-b border-gray-100 pb-1">Assessment & Plan</h4>
-                                            <ul className="text-sm text-gray-800 space-y-2 font-medium list-disc pl-4">
-                                                <li><span className="font-bold">Chest Pain (Unspecified):</span> Immediate referral to Emergency Department for EKG and cardiac enzyme evaluation due to acute onset of tight chest pain.</li>
-                                                <li><span className="font-bold">Sciatica (Left side):</span> Likely lumbar radiculopathy. Pain management and further imaging deferred pending cardiac clearance.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    {/* Coding Intelligence Panel */}
-                                    <div className="bg-slate-50 border-t border-gray-200 p-6">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                                <Search className="w-4 h-4 text-violet-600" />
-                                                AI Suggested Codes
-                                            </h4>
-                                            <span className="text-xs text-gray-500 font-medium">Confidence: High</span>
-                                        </div>
-                                        <div className="flex flex-wrap gap-3">
-                                            <div className="bg-white border text-left border-gray-200 rounded-xl p-3 shadow-sm hover:border-violet-300 transition-colors w-full sm:w-auto">
-                                                <span className="block text-xs text-gray-500 font-bold mb-1 uppercase tracking-wider">ICD-10-CM</span>
-                                                <span className="block font-mono font-black text-gray-900">R07.9</span>
-                                                <span className="block text-xs text-gray-600 mt-0.5 truncate max-w-[150px]">Chest pain, unspecified</span>
-                                            </div>
-                                            <div className="bg-white border text-left border-gray-200 rounded-xl p-3 shadow-sm hover:border-violet-300 transition-colors w-full sm:w-auto">
-                                                <span className="block text-xs text-gray-500 font-bold mb-1 uppercase tracking-wider">ICD-10-CM</span>
-                                                <span className="block font-mono font-black text-gray-900">M54.32</span>
-                                                <span className="block text-xs text-gray-600 mt-0.5 truncate max-w-[150px]">Sciatica, left side</span>
-                                            </div>
-                                            <div className="bg-white border text-left border-gray-200 rounded-xl p-3 shadow-sm hover:border-violet-300 transition-colors w-full sm:w-auto">
-                                                <span className="block text-xs text-gray-500 font-bold mb-1 uppercase tracking-wider">CPT</span>
-                                                <span className="block font-mono font-black text-gray-900">99213</span>
-                                                <span className="block text-xs text-gray-600 mt-0.5 truncate max-w-[150px]">Office visit, mid-level</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Footer */}
-                                    <div className="bg-white p-4 border-t border-gray-200 flex justify-end gap-3">
-                                        <button className="px-6 py-2.5 rounded-lg border border-gray-200 text-gray-700 font-bold hover:bg-gray-50 transition-colors shadow-sm">
-                                            Edit Note
-                                        </button>
-                                        <button className="px-8 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors shadow-md shadow-emerald-600/20 flex items-center gap-2">
-                                            <CheckCircle2 className="w-5 h-5" />
-                                            Approve & Sign to EHR
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+          )}
         </div>
-    )
+
+        {/* Right: SOAP Note */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <Edit3 className="w-5 h-5 text-violet-600" />
+            <h3 className="font-bold text-gray-900">AI-Generated SOAP Note</h3>
+            {soapStatus === 'ready' && (
+              <span className="ml-auto px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-bold">
+                ✓ Ready to Sign
+              </span>
+            )}
+          </div>
+
+          {soapStatus === 'idle' && (
+            <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-center text-gray-400 min-h-[320px] flex flex-col items-center justify-center">
+              <Edit3 className="w-10 h-10 mb-3 opacity-30" />
+              <p className="font-medium">SOAP note will auto-generate when the encounter ends</p>
+              <p className="text-xs mt-1">Powered by OpenAI GPT-4o-mini</p>
+            </div>
+          )}
+
+          {soapStatus === 'generating' && (
+            <div className="bg-violet-50 rounded-2xl border border-violet-100 p-8 text-center min-h-[320px] flex flex-col items-center justify-center">
+              <div className="w-12 h-12 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mb-4"></div>
+              <p className="font-bold text-violet-900">Generating SOAP Note...</p>
+              <p className="text-sm text-violet-600 mt-1">AI is analyzing the encounter transcript</p>
+            </div>
+          )}
+
+          {soapStatus === 'ready' && soapNote && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+            >
+              {/* Safety flags */}
+              {soapNote.safety_flags?.length > 0 && (
+                <div className="bg-red-50 border-b border-red-100 p-4">
+                  {soapNote.safety_flags.map((flag, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                      <p className="text-xs text-red-700 font-semibold">{flag}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="p-5 space-y-4">
+                {[
+                  { label: 'S — Subjective', value: soapNote.subjective, color: 'border-blue-400' },
+                  { label: 'O — Objective', value: soapNote.objective, color: 'border-gray-400' },
+                  { label: 'A — Assessment', value: soapNote.assessment, color: 'border-amber-400' },
+                  { label: 'P — Plan', value: soapNote.plan, color: 'border-emerald-400' },
+                ].map(({ label, value, color }) => (
+                  <div key={label} className={`border-l-4 ${color} pl-4`}>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{label}</p>
+                    <p className="text-sm text-gray-800 leading-relaxed">{value}</p>
+                  </div>
+                ))}
+
+                {/* Codes */}
+                <div className="pt-3 border-t border-gray-100">
+                  <div className="flex flex-wrap gap-2">
+                    {soapNote.icd10_codes?.map(code => (
+                      <span key={code} className="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-100 rounded text-xs font-mono font-bold">
+                        ICD-10: {code}
+                      </span>
+                    ))}
+                    {soapNote.cpt_codes?.map(code => (
+                      <span key={code} className="px-2 py-1 bg-violet-50 text-violet-700 border border-violet-100 rounded text-xs font-mono font-bold">
+                        CPT: {code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sign button */}
+                <button className="w-full py-3 bg-gray-900 hover:bg-black text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" /> Approve & Sign Note
+                </button>
+
+                {soapError && (
+                  <p className="text-xs text-amber-600 text-center">
+                    Note: Using fallback data (API unavailable)
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
