@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.routers import video, rcm, governance
+from app.routers import video, rcm, governance, codes
 
 app = FastAPI(
     title="Clear Mind Life API",
@@ -31,6 +31,7 @@ app.add_middleware(
 app.include_router(video.router)
 app.include_router(rcm.router)
 app.include_router(governance.router)
+app.include_router(codes.router)
 
 
 # ── Health / Status ───────────────────────────────────────────────────────────
