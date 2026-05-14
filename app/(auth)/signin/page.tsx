@@ -1,66 +1,79 @@
-import Link from "next/link";
+import { SignIn } from "@clerk/nextjs";
 
 export const metadata = {
-  title: "Launch Command Center - Clear Mind Life",
-  description: "Access the Clear Mind Life platform",
+  title: "Sign In - Clear Mind Life",
+  description: "Access the Clear Mind Life Command Center.",
 };
 
-export default function SignIn() {
+export default function SignInPage() {
   return (
-    <>
-      <div className="mb-10 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gray-900 border border-gray-800 text-3xl mb-6 shadow-xl">
-          🚀
-        </div>
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-800 to-gray-500 pb-2">Initialize Session</h1>
-        <p className="text-gray-500 mt-2">
-          Demo environment active. Authentication protocols bypassed for Alpha.
+    <div className="flex flex-col items-center">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">
+          Welcome back
+        </h1>
+        <p className="text-gray-500 font-medium">
+          Sign in to your Clear Mind Life account
         </p>
       </div>
 
-      <div className="space-y-4">
-        <Link
-          href="/dashboard/healthcare"
-          className="group relative flex items-center justify-between p-4 rounded-xl border border-gray-200 bg-white hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 transition-all overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="flex items-center gap-4 relative z-10">
-            <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl shadow-inner">
-              🧠
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900">Healthcare AI Orchestration</h3>
-              <p className="text-sm text-gray-500">Launch the clinical receptionist and triage engine</p>
-            </div>
-          </div>
-          <div className="text-gray-400 group-hover:text-blue-500 transition-colors relative z-10">
-            →
-          </div>
-        </Link>
+      <SignIn
+        appearance={{
+          elements: {
+            // Hide Clerk branding
+            footer: "hidden",
+            // Card styling
+            card: "shadow-none border-0 p-0 bg-transparent",
+            // Header — hide Clerk's own header since we have ours above
+            headerTitle: "hidden",
+            headerSubtitle: "hidden",
+            // Form inputs
+            formFieldInput:
+              "form-input w-full rounded-xl border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 py-3 px-4 text-base font-medium",
+            formFieldLabel: "text-sm font-semibold text-gray-700 mb-1",
+            // Primary button
+            formButtonPrimary:
+              "btn w-full bg-gray-900 hover:bg-black text-white font-bold rounded-xl py-3 text-base shadow-lg transition-all",
+            // Social buttons
+            socialButtonsBlockButton:
+              "w-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl py-3 text-sm transition-all shadow-sm",
+            socialButtonsBlockButtonText: "font-semibold text-gray-700",
+            // Divider
+            dividerLine: "bg-gray-200",
+            dividerText: "text-gray-400 text-sm font-medium",
+            // Links
+            footerActionLink: "text-blue-600 font-semibold hover:text-blue-700",
+            identityPreviewEditButton: "text-blue-600 font-semibold",
+            // Error
+            formFieldErrorText: "text-rose-600 text-sm font-medium mt-1",
+            // Internal card
+            rootBox: "w-full",
+          },
+          layout: {
+            socialButtonsPlacement: "top",
+            showOptionalFields: false,
+          },
+          variables: {
+            colorPrimary: "#111827",
+            colorText: "#111827",
+            colorTextSecondary: "#6b7280",
+            colorBackground: "#ffffff",
+            colorInputBackground: "#ffffff",
+            colorInputText: "#111827",
+            borderRadius: "0.75rem",
+            fontFamily: "Inter, sans-serif",
+          },
+        }}
+        fallbackRedirectUrl="/dashboard"
+        signUpUrl="/signup"
+      />
 
-        <Link
-          href="/dashboard/security/benchmark"
-          className="group relative flex items-center justify-between p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-900 hover:shadow-lg hover:shadow-gray-900/10 transition-all overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="flex items-center gap-4 relative z-10">
-            <div className="w-10 h-10 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center text-xl shadow-inner border border-gray-200">
-              ⚖️
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900">Universal Benchmark Matrix</h3>
-              <p className="text-sm text-gray-500">View real-time agent evaluations and threat scans</p>
-            </div>
-          </div>
-          <div className="text-gray-400 group-hover:text-gray-900 transition-colors relative z-10">
-            →
-          </div>
-        </Link>
-      </div>
-
-      <div className="mt-8 text-center text-sm text-gray-400">
-        <p>Clear Mind Life Agent Engine v2.0</p>
-      </div>
-    </>
+      <p className="mt-6 text-center text-sm text-gray-500">
+        Don&apos;t have an account?{" "}
+        <a href="/signup" className="font-semibold text-blue-600 hover:text-blue-700">
+          Request access
+        </a>
+      </p>
+    </div>
   );
 }

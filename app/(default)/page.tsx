@@ -1,13 +1,9 @@
 import Link from 'next/link'
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Anchor, ShieldCheck, ArrowRight, Check, Activity, Search, Command, ArrowDownRight, Zap, Server, BrainCircuit, ActivitySquare, AlertCircle, FileText, TrendingDown, TriangleAlert, Clock, Wallet } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import { Lead, Highlight } from '@/components/ui/typography'
 import { ExecutiveTakeaway } from '@/components/ui/takeaway'
-import LevelBadge from '@/components/hub/level-badge'
-import XPBar from '@/components/hub/xp-bar'
-import AITrustScoreCard from '@/components/hub/trust-score-card'
+import HumanEmpowermentSection from '@/components/landing/HumanEmpowermentSection'
 
 export const metadata = {
   title: 'Clear Mind Life — The Autonomous Healthcare Revenue Orchestrator',
@@ -32,7 +28,7 @@ export default function Home() {
             </span>
           </h1>
           <Lead className="max-w-3xl mx-auto mb-12">
-            Medical practices lose <Highlight color="rose">20% of their revenue</Highlight> to denied claims, opaque insurance verification, and physician burnout. We don't sell another point solution that traps your data. Clear Mind Life operates as a <Highlight color="indigo">Universal Orchestration Layer</Highlight> to stop the bleeding and put your staff back in command. <Highlight color="emerald">Live in 14 days. No hardware rip-and-replace.</Highlight>
+            Medical practices lose <Highlight color="rose">20% of their revenue</Highlight> to denied claims, opaque insurance verification, and physician burnout. We don&apos;t sell another point solution that traps your data. Clear Mind Life operates as a <Highlight color="indigo">Universal Orchestration Layer</Highlight> to stop the bleeding and put your staff back in command. <Highlight color="emerald">Live in 14 days. No hardware rip-and-replace.</Highlight>
           </Lead>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -68,7 +64,7 @@ export default function Home() {
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-gray-400 text-sm font-bold uppercase tracking-wider">After Clear Mind</span>
-                <span className="text-3xl font-black text-emerald-400"><span className="text-emerald-400/50">&lt;</span>5%</span>
+                <span className="text-3xl font-black text-emerald-400">&lt;5%</span>
                 <span className="text-gray-500 text-sm font-medium">First-Pass Denial Rate</span>
               </div>
               <div className="flex flex-col gap-1">
@@ -137,7 +133,6 @@ export default function Home() {
         </div>
       </section>
 
-
       {/* ── API Ecosystem Cloud ── */}
       <section className="py-12 border-y border-gray-100 bg-gray-50 overflow-hidden" id="integrations">
         <div className="max-w-6xl mx-auto px-6 text-center">
@@ -157,7 +152,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20 max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">Three Orchestration Agents, One Revenue Pipeline</h2>
-            <Lead>We don't sell generic chatbots. We deploy three highly-specialized agents that intercept the critical failure points of your revenue cycle — <Highlight color="indigo">your staff stays in command</Highlight>.</Lead>
+            <Lead>We don&apos;t sell generic chatbots. We deploy three highly-specialized agents that intercept the critical failure points of your revenue cycle — <Highlight color="indigo">your staff stays in command</Highlight>.</Lead>
           </div>
 
           <div className="space-y-16 lg:space-y-24">
@@ -207,20 +202,18 @@ export default function Home() {
                 </div>
                 <h3 className="text-3xl font-black text-gray-900 tracking-tight">The Front-Desk Receptionist</h3>
                 <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                  Eliminates the #1 reason for denied claims: **Insurance Eligibility Errors**.
-                  Before the patient even arrives, the Receptionist Agent utilizes **NexHealth** to read bi-directional scheduling data, executes a live X12 270/271 EDI exchange, and dispatches a secure **Twilio** SMS token for pre-visit payment.
+                  Eliminates the #1 reason for denied claims: Insurance Eligibility Errors.
+                  Before the patient even arrives, the Receptionist Agent utilizes NexHealth to read bi-directional scheduling data, executes a live X12 270/271 EDI exchange, and dispatches a secure Twilio SMS token for pre-visit payment.
                 </p>
-
                 <div className="my-6">
                   <ExecutiveTakeaway color="emerald">
                     Unlike dinosaur PM systems that rely on phone tag and clipboards, our agent interfaces directly with your EHR via federated identity. <span className="underline decoration-emerald-400 decoration-2 underline-offset-4 font-bold">No master credentials stored. No new hardware.</span>
                   </ExecutiveTakeaway>
                 </div>
-
                 <ul className="space-y-4 pt-4 mb-8">
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-0.5"><span className="text-blue-600 text-sm font-bold">✓</span></div>
-                    <span className="text-gray-700 font-medium">Real-time Copay & Deductible calculation</span>
+                    <span className="text-gray-700 font-medium">Real-time Copay &amp; Deductible calculation</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-0.5"><span className="text-blue-600 text-sm font-bold">✓</span></div>
@@ -228,7 +221,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-0.5"><span className="text-blue-600 text-sm font-bold">✓</span></div>
-                    <span className="text-gray-700 font-medium">Patients pay *before* the visit, securing cash flow</span>
+                    <span className="text-gray-700 font-medium">Patients pay before the visit, securing cash flow</span>
                   </li>
                 </ul>
                 <Link
@@ -281,15 +274,13 @@ export default function Home() {
                 <h3 className="text-3xl font-black text-gray-900 tracking-tight">The Post-Visit Analyzer</h3>
                 <p className="text-lg text-gray-600 leading-relaxed font-medium">
                   Returns 2 hours back to every provider, every day.
-                  Powered by **AssemblyAI**, the agent listens ambiently, constructs the full SOAP note, and automatically maps clinical context to accurate ICD-10 and CPT codes.
+                  Powered by AssemblyAI, the agent listens ambiently, constructs the full SOAP note, and automatically maps clinical context to accurate ICD-10 and CPT codes.
                 </p>
-
                 <div className="my-6">
                   <ExecutiveTakeaway color="violet">
                     Legacy scribes and basic dictation tools hoard your data. <span className="underline decoration-violet-400 decoration-2 underline-offset-4 font-bold">We enforce a strict Zero-Data Retention policy. Audio is ephemeral; only the FHIR payload survives.</span>
                   </ExecutiveTakeaway>
                 </div>
-
                 <ul className="space-y-4 pt-4 mb-8">
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-100 flex items-center justify-center mt-0.5"><span className="text-violet-600 text-sm font-bold">✓</span></div>
@@ -334,7 +325,6 @@ export default function Home() {
                     </div>
                     <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs font-bold rounded-lg transition-colors">Submit</button>
                   </div>
-
                   <div className="bg-white/50 rounded-xl p-4 border border-rose-200 shadow-sm relative overflow-hidden">
                     <div className="absolute inset-x-0 top-0 h-1 bg-rose-500"></div>
                     <div className="flex items-center justify-between mb-3">
@@ -351,7 +341,7 @@ export default function Home() {
                     <div className="bg-rose-50 rounded-lg p-3 border border-rose-100 mb-3">
                       <code className="text-[10px] text-rose-800 font-mono">ERROR: CPT 99214 requires modifier -25 when billed with procedure 20610.</code>
                     </div>
-                    <button className="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors">Auto-Fix & Submit</button>
+                    <button className="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors">Auto-Fix &amp; Submit</button>
                   </div>
                 </div>
               </div>
@@ -363,15 +353,13 @@ export default function Home() {
                 </div>
                 <h3 className="text-3xl font-black text-gray-900 tracking-tight">The Claims Intelligence Agent</h3>
                 <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                  Reactive denial management is dead. The Claims agent simulates payer adjudication on every X12 837 claim *before* it leaves your facility, utilizing an ML model trained on millions of historical denials to flag and auto-correct errors.
+                  Reactive denial management is dead. The Claims agent simulates payer adjudication on every X12 837 claim before it leaves your facility, utilizing an ML model trained on millions of historical denials to flag and auto-correct errors.
                 </p>
-
                 <div className="my-6">
                   <ExecutiveTakeaway color="emerald">
                     Dinosaurs wait 90 days for a denial, then charge you $22/claim to appeal it. <span className="underline decoration-emerald-400 decoration-2 underline-offset-4 font-bold">By proactively scrubbing pre-submission, we push your cost-to-collect down to $4.50.</span>
                   </ExecutiveTakeaway>
                 </div>
-
                 <ul className="space-y-4 pt-4 mb-8">
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5"><span className="text-emerald-600 text-sm font-bold">✓</span></div>
@@ -399,82 +387,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Human Empowerment Section ── */}
-      <section className="py-24 px-6 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold mb-6 tracking-widest uppercase shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-              Human-in-the-Loop
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
-              We Don't Replace Your Team. <br />
-              <span className="text-indigo-600">We Give Them Superpowers.</span>
-            </h2>
-            <Lead className="max-w-3xl mx-auto">
-              We don't replace your human staff; we deploy an Orchestration Layer to stop the bleeding and put them in command. Automation eliminates brutal, repetitive data entry so your team can focus on high-yield patient care.
-            </Lead>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-12 mt-12 items-center">
-            {/* Left Column: Visual Teasers */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-6 hover:-translate-y-1 transition-transform cursor-pointer">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="font-bold text-gray-900">Your Rank Profile</span>
-                  <LevelBadge level="pilot" />
-                </div>
-                <XPBar currentXP={4850} nextLevelXP={5000} />
-              </div>
-
-              <div className="bg-white hover:-translate-y-1 transition-transform cursor-pointer">
-                <AITrustScoreCard score={92} trend="up" claimsProcessed={12450} />
-              </div>
-            </div>
-
-            {/* Right Column: Narrative */}
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-3xl font-black text-gray-900 tracking-tight mb-4">Ascension Over Automation</h3>
-                <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                  When the engine is unsure (sub-95% confidence), it pauses and routes the exception to your staff. Every human correction trains *your* facility's customized model, preventing the same mistake twice.
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
-                    <span className="text-indigo-600 font-bold">1</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-lg">Earn Reputation</h4>
-                    <p className="text-gray-600 font-medium">Staff earn XP and ascend ranks (Academy → Pilot → Protocol Engineer) by catching AI anomalies.</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
-                    <span className="text-indigo-600 font-bold">2</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-lg">Unlock the Bounty Network</h4>
-                    <p className="text-gray-600 font-medium">Elite "Protocol Engineers" can pick up overflow tasks from the global network to earn supplemental income.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <Link
-                  href="/train"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-colors shadow-lg"
-                >
-                  Enter the Empowerment Hub <ArrowRight className="w-5 h-5" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── Human Empowerment Section (client component) ── */}
+      <HumanEmpowermentSection />
 
       {/* ── Consolidation CTA ── */}
       <section className="py-24 px-6 bg-slate-50 border-t border-gray-200 shrink-0">
@@ -485,22 +399,17 @@ export default function Home() {
           </div>
           <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight">Retain Your Infrastructure</h2>
           <p className="text-xl text-gray-600 font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
-            Legacy kiosks and point solutions try to trap your data. Clear Mind uses a BYOD (Bring Your Own Device) architecture. We don't rip and replace your hardware; we orchestrate it via standard APIs.
+            Legacy kiosks and point solutions try to trap your data. Clear Mind uses a BYOD (Bring Your Own Device) architecture. We don&apos;t rip and replace your hardware; we orchestrate it via standard APIs.
           </p>
-
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link
               href="/compare"
               className="px-8 py-4 rounded-xl bg-gray-900 hover:bg-black text-white text-lg font-black transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
             >
               See the Legacy Vendor Teardowns
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-
-          {/* Faded Vendor Logos/Names Background */}
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 mt-16 opacity-30 grayscale">
             <span className="text-xl font-bold decoration-rose-500/50 decoration-2 line-through">Phreesia</span>
             <span className="text-xl font-bold decoration-rose-500/50 decoration-2 line-through">ScribeAmerica</span>
