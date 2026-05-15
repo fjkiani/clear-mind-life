@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Video, Mic, Edit3, ShieldAlert, CheckCircle2, Search, Zap, Activity, RefreshCw } from 'lucide-react'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://backend-healthtech.onrender.com'
 
 type TranscriptLine = {
   speaker: 'Doctor' | 'Patient'

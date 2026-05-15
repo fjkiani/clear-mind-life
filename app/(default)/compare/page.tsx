@@ -18,7 +18,6 @@ import BillingSimulator from '@/components/dashboard/billing-simulator'
 import BenchmarkPanel, { BenchmarkData } from '@/components/compare/benchmark-panel'
 import HeadToHead from '@/components/compare/head-to-head'
 import BenchmarkMoat from '@/components/compare/benchmark-moat'
-import Footer from '@/components/ui/footer'
 import { Lead, Highlight } from '@/components/ui/typography'
 import { ExecutiveTakeaway } from '@/components/ui/takeaway'
 
@@ -359,7 +358,6 @@ export default function ComparePage() {
 
             </main >
 
-            <Footer />
 
             <style jsx global>{`
         .hide-scrollbars::-webkit-scrollbar {

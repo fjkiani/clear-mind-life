@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://backend-healthtech.onrender.com'
 
 // ── Identity Verticals ─────────────────────────────────────────────────────
 const VERTICAL_CONFIG: Record<string, {

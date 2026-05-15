@@ -5,7 +5,7 @@ import { CheckCircle2, XCircle, AlertTriangle, Shield, ShieldAlert, Cpu, Lock, A
 import McpBenchmarks from '@/components/dashboard/mcp/mcp-benchmarks'
 import { useMcpData } from '@/components/dashboard/mcp/use-mcp-data'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://backend-healthtech.onrender.com'
 
 const CATEGORY_META = {
     auth: { label: 'Authentication', icon: <Lock className="w-5 h-5" />, color: 'violet', gradient: 'from-violet-500 to-indigo-500', bg: 'bg-violet-50/50 dark:bg-violet-500/10', border: 'border-violet-200 dark:border-violet-500/20', text: 'text-violet-700 dark:text-violet-300' },

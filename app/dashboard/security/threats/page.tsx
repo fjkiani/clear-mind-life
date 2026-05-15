@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://backend-healthtech.onrender.com'
 
 const ATTACK_SCENARIOS = [
     { label: 'JWT alg:none bypass', tier: 'T1', payload: { jwt_token: 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyXzEyMyIsInJvbGUiOiJhZG1pbiJ9.' } },
