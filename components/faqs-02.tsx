@@ -1,87 +1,87 @@
 import Accordion from "@/components/accordion";
 
 export default function Faqs() {
-  const faqs01 = [
+  const gettingStarted = [
     {
-      question: "Getting started with Simple",
+      question: "How does Clear Mind Life connect to my existing EHR?",
       answer:
-        "Simple is designed to be user-friendly and intuitive, while Complex is more robust and feature-rich. Both tools are great for creating websites, but Simple is ideal for beginners and small businesses, while Complex is better suited for larger organizations and developers.",
+        "We connect via standard FHIR R4 APIs — no rip-and-replace required. For Epic, Cerner, and Athena, we use OAuth 2.0 SMART on FHIR tokens. For legacy PM systems, we offer an HL7 v2 bridge. Most practices are live within 14 days.",
     },
     {
-      question: "Promotional and free plan trials",
+      question: "What EDI transaction standards do you support?",
       answer:
-        "Yes, but you'll still pay the remainder of the term for the plan you signed up for.",
+        "We support the full HIPAA EDI suite: X12 270/271 (eligibility), X12 278 (prior authorization), X12 837P/I (professional and institutional claims), X12 835 (remittance advice), and X12 277 (claim status). All transactions are routed through Availity or your existing clearinghouse.",
     },
     {
-      question: "I'm unable to verify my account",
+      question: "How long does onboarding take?",
       answer:
-        "Yes, but you'll still pay the remainder of the term for the plan you signed up for.",
+        "For a standard 5-provider practice, onboarding takes 10–14 business days. This includes EHR API credentialing, payer enrollment verification, staff training on the review workflow, and a parallel-run period where we scrub claims alongside your existing process before going live.",
     },
     {
-      question: "Copyright (DMCA) Takedown Notice",
+      question: "Do I need to replace my existing practice management system?",
       answer:
-        "Support is available 24/7 via email, chat, and phone. We're here to help you with any questions or concerns you may have.",
+        "No. Clear Mind Life is an orchestration layer, not a replacement. We sit on top of your existing PM system and EHR, reading and writing data via APIs. Your staff continues using the tools they know — we eliminate the manual steps between them.",
     },
     {
-      question: "How to report an unrecognized charge",
+      question: "Is my patient data safe? Where is PHI stored?",
       answer:
-        "Yes! You can invite clients or coworkers to collaborate on your projects, and they can upload their own content.",
-    },
-  ];
-
-  const faqs02 = [
-    {
-      question: "Change with my paid plan",
-      answer:
-        "Simple is designed to be user-friendly and intuitive, while Complex is more robust and feature-rich. Both tools are great for creating websites, but Simple is ideal for beginners and small businesses, while Complex is better suited for larger organizations and developers.",
-    },
-    {
-      question: "Cancel my subscription",
-      answer:
-        "Yes, but you'll still pay the remainder of the term for the plan you signed up for.",
-    },
-    {
-      question: "I am unable to edit my profile",
-      answer:
-        "Yes, but you'll still pay the remainder of the term for the plan you signed up for.",
-    },
-    {
-      question: "How to delete my account",
-      answer:
-        "Support is available 24/7 via email, chat, and phone. We're here to help you with any questions or concerns you may have.",
-    },
-    {
-      question: "How to reach customer support",
-      answer:
-        "Yes! You can invite clients or coworkers to collaborate on your projects, and they can upload their own content.",
+        "PHI is never stored in our LLM layer. We enforce strict PHI scrubbing before any data touches an AI model. Patient data at rest is encrypted with AES-256 in HIPAA-compliant infrastructure (AWS GovCloud). We execute a Business Associate Agreement (BAA) with every customer before go-live.",
     },
   ];
 
-  const faqs03 = [
+  const billingClaims = [
     {
-      question: "How to change my password",
+      question: "How does the denial prediction engine work?",
       answer:
-        "Simple is designed to be user-friendly and intuitive, while Complex is more robust and feature-rich. Both tools are great for creating websites, but Simple is ideal for beginners and small businesses, while Complex is better suited for larger organizations and developers.",
+        "Our ML model is trained on 10M+ historical 835 remittance lines across UHC, Aetna, BCBS, Cigna, and Medicaid. Before each 837 claim is submitted, the engine simulates payer adjudication against 2.3M NCCI Procedure-to-Procedure edit pairs and payer-specific LCD/NCD policies. Claims scoring below 95% confidence are flagged for human review with a specific fix recommendation.",
     },
     {
-      question: "How to change my email address",
+      question: "Which payers do you support?",
       answer:
-        "Yes, but you'll still pay the remainder of the term for the plan you signed up for.",
+        "We support all major commercial payers (UnitedHealthcare, Aetna, BCBS, Cigna, Humana), all 50 state Medicaid programs, Medicare FFS, and Medicare Advantage plans. Payer-specific rule sets are updated quarterly when CMS releases new NCCI edit tables.",
     },
     {
-      question: "How to change my username",
+      question: "Can I still manually review claims before submission?",
       answer:
-        "Yes, but you'll still pay the remainder of the term for the plan you signed up for.",
+        "Yes — and we encourage it. Claims above 98% confidence are queued for one-click approval. Claims between 85–98% are flagged with the specific rule violation and a suggested fix. Claims below 85% are held for full human review. You control the confidence thresholds.",
     },
     {
-      question: "How to change my billing information",
+      question: "How do you handle ERA/835 reconciliation?",
       answer:
-        "Support is available 24/7 via email, chat, and phone. We're here to help you with any questions or concerns you may have.",
+        "When a payer returns an 835 remittance, our agent automatically matches each payment line to the original 837 claim, calculates contractual adjustments, and flags underpayments. Underpayments above your configured threshold trigger an automatic secondary billing or appeal workflow.",
     },
     {
-      question: "How to change my notification settings",
+      question: "What happens when a claim is denied despite pre-scrubbing?",
       answer:
-        "Yes! You can invite clients or coworkers to collaborate on your projects, and they can upload their own content.",
+        "The denial triggers an automatic appeal workflow. The agent pulls the denial reason code (CARC/RARC), drafts a clinically rigorous appeal letter citing the specific payer guideline, and queues it for provider signature. For CO-4 and CO-97 denials (bundling/unbundling), the agent auto-corrects the modifier and resubmits within 24 hours.",
+    },
+  ];
+
+  const securityCompliance = [
+    {
+      question: "Are you HIPAA compliant?",
+      answer:
+        "Yes. Clear Mind Life is fully HIPAA compliant. We maintain a comprehensive HIPAA Security Rule program including annual risk assessments, workforce training, technical safeguards (encryption, access controls, audit logging), and physical safeguards for all infrastructure.",
+    },
+    {
+      question: "Do you execute a Business Associate Agreement (BAA)?",
+      answer:
+        "Yes — a BAA is required and executed before any PHI is processed. We do not allow any customer to go live without a signed BAA in place. Our BAA covers all subprocessors including our cloud infrastructure provider and any AI model vendors.",
+    },
+    {
+      question: "How does PHI scrubbing work before LLM routing?",
+      answer:
+        "Before any clinical text reaches an LLM, our PHI scrubbing pipeline identifies and redacts 18 HIPAA Safe Harbor identifiers (names, dates, geographic data, phone numbers, etc.) using a combination of regex patterns and a fine-tuned NER model. The scrubbed text is what the LLM sees — the original PHI never leaves your infrastructure.",
+    },
+    {
+      question: "What security certifications do you hold?",
+      answer:
+        "We are SOC 2 Type II certified (audited annually by an independent CPA firm), HIPAA compliant, and operate under a HITRUST CSF framework. Our infrastructure partners (AWS GovCloud) hold FedRAMP High authorization. Penetration testing is conducted quarterly by an independent third party.",
+    },
+    {
+      question: "How do you prevent AI hallucinations in clinical documentation?",
+      answer:
+        "Every AI-generated SOAP note, ICD-10 code suggestion, and CPT code is presented to the provider for review before it enters the EHR. We enforce a human-in-the-loop gate on all clinical outputs. Additionally, our code suggestions are cross-referenced against the ground-truth CMS code database (74,719 ICD-10 codes, 15,804 CPT RVU records) to prevent fabricated codes.",
     },
   ];
 
@@ -90,51 +90,49 @@ export default function Faqs() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="pb-12 md:pb-20">
           <div className="mx-auto max-w-3xl space-y-12">
-            {/* Getting started */}
+
+            {/* Getting Started */}
             <div>
-              <h2 className="mb-5 text-xl font-bold">Getting Started</h2>
+              <h2 className="mb-5 text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span className="text-2xl">🚀</span> Getting Started
+              </h2>
               <div className="space-y-2">
-                {faqs01.map((faq, index) => (
-                  <Accordion
-                    key={index}
-                    title={faq.question}
-                    id={`faqs-${index}`}
-                  >
+                {gettingStarted.map((faq, index) => (
+                  <Accordion key={index} title={faq.question} id={`gs-${index}`}>
                     {faq.answer}
                   </Accordion>
                 ))}
               </div>
             </div>
-            {/* Profile & plans */}
+
+            {/* Billing & Claims */}
             <div>
-              <h2 className="mb-5 text-xl font-bold">Profile & plans</h2>
+              <h2 className="mb-5 text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span className="text-2xl">💳</span> Billing &amp; Claims
+              </h2>
               <div className="space-y-2">
-                {faqs02.map((faq, index) => (
-                  <Accordion
-                    key={index}
-                    title={faq.question}
-                    id={`faqs-${index}`}
-                  >
+                {billingClaims.map((faq, index) => (
+                  <Accordion key={index} title={faq.question} id={`bc-${index}`}>
                     {faq.answer}
                   </Accordion>
                 ))}
               </div>
             </div>
-            {/* Accounts */}
+
+            {/* Security & Compliance */}
             <div>
-              <h2 className="mb-5 text-xl font-bold">Accounts</h2>
+              <h2 className="mb-5 text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span className="text-2xl">🛡️</span> Security &amp; Compliance
+              </h2>
               <div className="space-y-2">
-                {faqs03.map((faq, index) => (
-                  <Accordion
-                    key={index}
-                    title={faq.question}
-                    id={`faqs-${index}`}
-                  >
+                {securityCompliance.map((faq, index) => (
+                  <Accordion key={index} title={faq.question} id={`sc-${index}`}>
                     {faq.answer}
                   </Accordion>
                 ))}
               </div>
             </div>
+
           </div>
         </div>
       </div>

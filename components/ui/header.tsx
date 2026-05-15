@@ -15,7 +15,6 @@ export default function Header() {
 
           {/* Desktop navigation */}
           <nav className="hidden md:flex md:grow">
-            {/* Desktop menu links */}
             <ul className="flex grow flex-wrap items-center justify-center gap-4 text-sm lg:gap-8">
               <li className="px-3 py-1">
                 <Link
@@ -65,7 +64,6 @@ export default function Header() {
                   Customers
                 </Link>
               </li>
-              {/* 1st level: hover */}
               <Dropdown title="More">
                 <li>
                   <Link
@@ -95,7 +93,7 @@ export default function Header() {
             </ul>
           </nav>
 
-          {/* Desktop sign in links */}
+          {/* Desktop auth links */}
           <ul className="flex flex-1 items-center justify-end gap-3">
             <li>
               <Link
@@ -103,6 +101,14 @@ export default function Header() {
                 className="btn-sm bg-white text-gray-800 shadow hover:bg-gray-50"
               >
                 View Demo
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/signin"
+                className="btn-sm bg-white text-gray-700 shadow hover:bg-gray-50 border border-gray-200"
+              >
+                Sign In
               </Link>
             </li>
             <li>
