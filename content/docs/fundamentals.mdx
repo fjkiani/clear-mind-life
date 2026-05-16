@@ -1,77 +1,63 @@
 ---
-title: "Basics & Fundamentals"
+title: "Platform Overview"
 publishedAt: "2026-02-24"
-updatedAt: "2026-02-24"
-summary: "Understand the core architecture of Clear Mind Life: The unified ReAct agent design, the strict HIPAA compliance boundary, and the threat model matrix protecting against MFA fatigue and API exploits."
+updatedAt: "2026-05-01"
+summary: "How Clear Mind Life works: the 3 agents, the medical coding database, and how they connect to your practice."
 kind: "detailed"
 ---
 
-## Introduction
+## What Clear Mind Life Is
 
-Clear Mind Life is not a traditional CRUD application. It is a dual-engine architecture comprising **Clear Mind Life Identity** (Security/Identity) and **Clear Mind Life Triage** (Telehealth/Operations), entirely orchestrated by autonomous ReAct agents.
+Clear Mind Life is an autonomous Revenue Cycle Management (RCM) platform built specifically for mental health practices. It handles eligibility verification, clinical documentation, and claim scrubbing — the three biggest sources of administrative burden and revenue loss in mental health billing.
 
-This guide outlines the critical infrastructure principles you must adhere to when building extensions or integrating Clear Mind Life into your clinical or security environments.
+The platform connects to your existing EHR, your payer accounts, and your scheduling system. It doesn't replace your staff. It handles the work that shouldn't require human attention in the first place.
 
-<Image
-  src="/images/docs-illustration.png"
-  width="740"
-  height="424"
-  alt="Clear Mind Life Architecture Diagram"
-/>
+## The Three Agents
 
-## The ReAct Architecture
+Clear Mind Life runs on three specialized agents. Each one owns a distinct part of the patient visit lifecycle.
 
-At the core of Clear Mind Life is a unified ReAct (Reasoning and Acting) agent design powered by the **Model Context Protocol (MCP)**. 
+### Receptionist Agent
 
-Unlike traditional APIs that require hardcoded if/else logic for every possible user action, the Clear Mind Life agent receives a high-level goal and autonomously selects the appropriate MCP servers to execute it. 
+The Receptionist Agent runs when a patient books an appointment. It sends an X12 270 eligibility transaction to the patient's payer and gets back a 271 response with coverage details: copay, deductible status, network status, and whether prior authorization is required for the planned service.
 
-The `mcp_client_service.py` acts as the neural bridge. For example, if a user requests to "Schedule an MRI," the agent:
-1. Calls the FHIR Schema translation MCP to locate the patient.
-2. Calls the Insurance Verification MCP to check prior-authorization rules for that specific CPT code.
-3. Calls the Calendar scheduling MCP to book the slot.
+If auth is required, the agent pre-populates and submits the authorization request before the appointment date. If the patient's coverage has lapsed or the plan has a behavioral health carve-out, the agent flags it for staff review — before the patient arrives, not after the claim is denied.
 
-<Banner title="Building Custom MCP Servers?">
-  Clear Mind Life allows you to plug in your own proprietary MCP servers. Ensure your servers conform to the standard `CallToolRequest` schema. Review our MCP integration guide to connect your internal databases.
-</Banner>
+### Encounter Agent
 
-## The HIPAA Compliance Boundary
+The Encounter Agent runs during and immediately after a clinical session. It transcribes the session in real time using AssemblyAI, identifies clinically relevant content, and generates a complete SOAP note draft when the session ends.
 
-In healthcare operations, feeding raw Patient Health Information (PHI) to LLM providers is a critical violation. Clear Mind Life Triage enforces a strict, programmatic HIPAA Compliance Boundary.
+The draft includes the patient's reported symptoms (Subjective), the provider's observations (Objective), a working diagnosis with ICD-10 codes (Assessment), and the treatment plan (Plan). The provider reviews the draft and approves it — typically in under 5 minutes. The signed note triggers claim generation.
 
-Before any data leaves the local Clear Mind Life execution environment to hit the cognitively reasoning agent layer, it passes through the `HIPAAFilter`.
+### Billing Agent
 
-- **Detection:** Regex masks and Named Entity Recognition (NER) identify diagnosis identifiers (e.g., "diabetes", "cancer"), medication names, and raw lab values.
-- **Sanitization:** The data is transformed ("Patient has a diabetes appointment" becomes "Patient has an endocrinology appointment").
-- **Execution:** The agent orchestrates the calendar tools using the sanitized string.
+The Billing Agent runs when a claim is generated. It checks every claim against five medical coding databases before submission: ICD-10 diagnosis codes, NCCI PTP bundling edits, CPT RVU values, Medically Unlikely Edits (MUEs), and HCPCS codes.
 
-## Threat Model Matrix
+If a claim has a coding error — missing modifier, bundled code pair, units above the MUE — the agent blocks the claim and provides a specific correction instruction. Clean claims go to the clearinghouse. Flagged claims go to the billing queue for review.
 
-Clear Mind Life Identity is designed to autonomously neutralize threats that bypass legacy static infrastructures. 
+## The Medical Coding Database
 
-### 1. MFA Fatigue & Prompt Bombing
-When an attacker spams a user's phone with MFA requests, legacy IdPs eventually grant access if the user clicks "Approve." Clear Mind Life Identity evaluates the contextual velocity of the requests. If 14 prompts occur in 5 minutes from an unfamiliar ASN, the agent invalidates the session token immediately, dropping the MFA fatigue success rate to zero.
+The database behind the Billing Agent contains 2,505,007 records across five tables:
 
-### 2. Cross-Tenant IDOR (Insecure Direct Object Reference)
-Clear Mind Life Identity does not rely on static JWTs for determining access rights. The agent validates every database query against the user's granular RBAC matrix in real-time, preventing lateral movement even if an API key is compromised.
+| Table | Records | Purpose |
+|-------|---------|---------|
+| ICD-10-CM | 74,719 | Diagnosis code validation and specificity checking |
+| NCCI PTP | 2,387,727 | Bundling edit checks for CPT code pairs |
+| CPT RVU | 15,804 | Procedure code validation and payment rate reference |
+| MUE | 15,095 | Maximum units per day per CPT code |
+| HCPCS | 8,727 | Supply and service codes including telehealth modifiers |
 
-## FHIR Schema Translation
+The database is updated quarterly when CMS publishes new code sets and edit tables. Every claim runs through all five tables before submission.
 
-To combat the $20 Billion lost annually to claims denials caused by intake paperwork errors, Clear Mind Life natively translates all unstructured clinical text into **FHIR R4 resources**.
+## How a Patient Visit Flows Through the Platform
 
-When integrating Clear Mind Life Triage into your clinic, you do not need to adapt your doctors' raw notes. The Telehealth agent parses the audio/video transcript, extracts the chief complaint, validates the ICD-10 codes, and structures the entire encounter into a standard FHIR payload ready for the clearinghouse.
+**Step 1 — Booking:** Patient schedules an appointment. Receptionist Agent runs eligibility check. Auth request submitted if required. Practice receives eligibility summary.
 
-### Example: Validation Error
+**Step 2 — Session:** Provider conducts the visit. Encounter Agent transcribes in real time. SOAP note draft is generated when the session ends.
 
-If an extension attempts to push invalid FHIR schemas, the ReAct agent will intercept it and throw a validation error before the database layer is hit:
+**Step 3 — Documentation:** Provider reviews and approves the SOAP note. ICD-10 codes are confirmed. CPT codes are suggested based on session type and duration.
 
-```bash
-{
-  "message": "Schema Validation Failed",
-  "code": "fhir_r4_compliance_error",
-  "details": ["Missing required field: Patient.identifier"],
-}
-```
+**Step 4 — Claim generation:** Billing Agent generates the claim from the signed note. Claim runs through all five coding databases. Clean claims are submitted to the clearinghouse. Flagged claims go to the billing queue.
 
-## Conclusion
+**Step 5 — Payment:** Clearinghouse submits the 837 claim to the payer. 835 remittance is received and matched to the claim. Payment is posted to the patient's account.
 
-By adhering to the ReAct agent paradigm and strictly respecting the HIPAA and Threat Model boundaries, you can use Clear Mind Life to automate highly complex, highly regulated operations.
+The entire flow — from booking to claim submission — happens without manual data entry at any step.

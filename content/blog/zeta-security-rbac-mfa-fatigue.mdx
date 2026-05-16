@@ -1,28 +1,55 @@
 ---
-title: "The Danger of 'Approve': Stopping MFA Hackers in Their Tracks"
-publishedAt: "2026-02-24"
-summary: "Hackers aren't guessing your password anymore. They're just annoying you until you let them in. Here is how Clear Mind Life Identity stops them."
+title: "HIPAA Isn't a Checkbox. Here's What We Actually Built."
+publishedAt: "2026-03-01"
+summary: "BAA, AES-256, TLS 1.3, zero-retention audio, role-based access. Not marketing copy — this is the actual implementation."
 author: "Clear Mind Life Team"
 authorImg: "/images/blog-author-01.jpg"
-image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=80"
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
 ---
 
-The average data breach in the US now costs a staggering $10 Million. While 97% of these attacks involve passwords, the most alarming trend in cybersecurity is the 500% spike in ransomware driven by something called *MFA Fatigue*.
+Every healthcare software vendor says they're HIPAA compliant. Most of them mean they signed a BAA and turned on encryption. That's the floor, not the ceiling. Here's what we actually built and why each piece exists.
 
-What is MFA Fatigue? Hackers have realized that even with Multi-Factor Authentication (MFA) turned on, human psychology is a vulnerability. They aren't trying to guess your code. Instead, they wait until 2 AM and bombard your phone with twenty "Approve Login?" notifications in a row. Eventually, a tired, frustrated employee just clicks "Approve" so they can go back to sleep. 
+## The PHI Boundary
 
-Legacy security systems completely fail here. They see that the user clicked "Approve" and they open the door to the entire company database. 
+The most important architectural decision we made: PHI never touches the LLM layer. When our AI agents process clinical data, they work with structured, de-identified representations — not raw patient records.
 
-## Beyond the Password
+Before any data reaches the reasoning layer, it passes through a sanitization step. Patient names become anonymized identifiers. Diagnosis codes are passed as codes (F32.1), not as plain-text descriptions that could be reconstructed into a patient profile. The LLM sees "patient_id: 8472, dx: F32.1, cpt: 90837" — not "John Smith, 42, major depression, therapy session."
 
-Clear Mind Life Identity flips this entirely on its head. Instead of just asking "Did the user click the button?", we deploy a smart, continuous security agent that asks *contextual* questions in real-time. 
+The original PHI stays in our encrypted database. The LLM never sees it. This isn't just a HIPAA requirement — it's the only architecture that makes sense when you're using third-party AI infrastructure.
 
-When an employee attempts to log in, our agent evaluates the situation instantly:
+## Audio: Zero Retention
 
-1. **Does this make sense?** Is this login request coming from an unrecognized internet connection halfway across the globe at 3:00 AM?
-2. **Is this normal behavior?** Does this specific employee usually try to access the core production database on a Sunday?
-3. **Is the user under attack?** Has this employee received fourteen login prompts in the last ten minutes? 
+Our ambient transcription feature uses AssemblyAI for real-time speech-to-text during therapy sessions. The audio stream is sent to AssemblyAI over TLS 1.3, transcribed in real time, and the transcript is returned. The audio is never stored — not by us, not by AssemblyAI.
 
-If the agent detects this pattern of harassment, it doesn't even bother waking the employee up. It recognizes the MFA prompt bombing for what it is—an attack—and proactively blocks the login attempt before the hacker can get a foot in the door.
+We have a zero-retention agreement with AssemblyAI as part of our BAA. The audio stream is ephemeral: it exists in memory during the session and is discarded immediately after transcription. The transcript itself is stored in our encrypted database, associated with the encounter record, and subject to the same access controls as all other PHI.
 
-Clear Mind Life Identity doesn't just manage passwords. It acts as an active, intelligent bodyguard for your entire digital workspace, protecting your organization from the multi-million dollar mistakes that keep executives up at night.
+If a provider ends a session and asks "can you replay the audio?" — the answer is no. That's intentional.
+
+## Encryption: At Rest and In Transit
+
+All PHI at rest is encrypted with AES-256. We use AWS RDS with encryption enabled at the storage layer, plus application-level encryption for the most sensitive fields (SSN, date of birth, diagnosis history). Encryption keys are managed through AWS KMS with automatic rotation.
+
+All data in transit uses TLS 1.3. We enforce TLS 1.3 minimum — TLS 1.2 connections are rejected. This applies to every connection: browser to server, server to EHR, server to clearinghouse, server to AssemblyAI.
+
+## Role-Based Access Control
+
+Not everyone in a practice needs to see everything. Our RBAC system has four default roles:
+
+- **Provider**: can view and approve their own patients' SOAP notes and claims. Cannot see other providers' patients.
+- **Biller**: can view all claims and remittance data. Cannot view clinical notes.
+- **Front Desk**: can view scheduling and eligibility data. Cannot view diagnosis codes or clinical notes.
+- **Admin**: full access. Requires MFA on every login, not just the first.
+
+Every database query is scoped to the user's role and practice. A biller at Practice A cannot access Practice B's data even if they have a valid session token — the query itself is filtered at the application layer, not just the UI.
+
+## Audit Logs
+
+Every action that touches PHI generates an immutable audit log entry: who accessed what, when, from which IP address, and what they did. Audit logs are written to a separate, append-only store. They cannot be edited or deleted — not by admins, not by us.
+
+If a regulator asks "who accessed patient 8472's records on March 15th?" — we can answer that question in under 30 seconds with a complete, tamper-proof record.
+
+## The BAA
+
+We sign a Business Associate Agreement with every practice before they connect their data. The BAA specifies exactly what data we process, how we process it, and our obligations in the event of a breach. It's not a standard click-through agreement — it's a document we review with practices before onboarding.
+
+HIPAA compliance is a legal requirement. The architecture above is what makes it real.

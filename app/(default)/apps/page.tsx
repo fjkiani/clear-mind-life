@@ -140,6 +140,140 @@ const INTEGRATIONS = [
   },
 ]
 
+  {
+    id: 'availity',
+    name: 'Availity',
+    tagline: 'Real-Time Insurance Eligibility',
+    color: 'emerald',
+    icon: Activity,
+    logoText: 'Availity',
+    category: 'Payer Network',
+    website: 'https://availity.com',
+    elevator: `Insurance verification is the first place revenue leaks. We connect to Availity's real-time eligibility API — the same network used by 2,000+ payers — to run X12 270 requests the moment an appointment is booked. The X12 271 response comes back in seconds: copay, deductible, network status, prior auth requirements.`,
+    howWeUseIt: [
+      { label: 'X12 270 Eligibility Request', desc: 'Sent automatically when NexHealth fires an appointment webhook. We query the patient's insurance plan, member ID, and date of service.' },
+      { label: 'X12 271 Response Parsing', desc: 'We parse the 271 response into structured data: copay amount, deductible met/remaining, in-network status, and any prior auth requirements.' },
+      { label: 'Prior Auth Flag', desc: 'If the 271 response indicates prior auth is required, we flag the appointment and trigger the auth workflow — 48 hours before the visit.' },
+      { label: 'Real-Time Copay Collection', desc: 'Once copay is confirmed, we push a Stripe payment link to the patient via Twilio SMS. Cash collected before the visit.' },
+    ],
+    security: {
+      title: "HIPAA-Compliant Payer Connectivity",
+      description: "How our Availity integration protects eligibility data:",
+      points: [
+        { label: 'BAA Executed', desc: 'All eligibility transactions are covered under a Business Associate Agreement with Availity.' },
+        { label: 'TLS 1.3 in Transit', desc: 'All X12 EDI transactions are encrypted in transit. No eligibility data is stored beyond the session.' },
+        { label: 'Payer Network Coverage', desc: 'Availity connects to 2,000+ payers including UHC, BCBS, Aetna, Cigna, and Medicaid plans.' },
+        { label: 'Audit Logging', desc: 'Every eligibility check is logged with timestamp, payer, member ID hash, and response code for HIPAA compliance.' },
+      ]
+    },
+    apiFlow: [
+      { step: '1', label: 'Send X12 270 request', code: `POST /v1/eligibility-and-benefits/270\n{ "memberId": "A12B34", "payerId": "UHC001", "serviceType": "30", "dos": "2026-05-20" }` },
+      { step: '2', label: 'Receive X12 271 response', code: `{ "copay": 30, "deductibleMet": true, "inNetwork": true, "priorAuthRequired": false }` },
+      { step: '3', label: 'Flag prior auth if needed', code: `if (priorAuthRequired) { triggerAuthWorkflow(patientId, cptCode) }` },
+      { step: '4', label: 'Push copay to patient', code: `POST /messages\n{ "to": patient.phone, "body": "Your copay is $30. Pay here: stripe.link/..." }` },
+    ],
+    scenario: {
+      label: 'Eligibility Check Flow',
+      steps: [
+        { speaker: 'NexHealth', text: 'Webhook: Sarah Johnson booked for 9:00 AM tomorrow.', type: 'provider' },
+        { speaker: 'Agent', text: 'Running X12 270 eligibility check against BlueCross via Availity...', type: 'ai' },
+        { speaker: 'Availity', text: 'X12 271: Active. Copay $30. Deductible met. In-network. No prior auth required.', type: 'provider' },
+        { speaker: 'Agent', text: 'Sending copay payment link to Sarah via Twilio SMS...', type: 'ai' },
+        { speaker: 'Patient', text: 'Sarah paid $30 via Stripe. Appointment confirmed. ✓', type: 'patient' },
+      ],
+    },
+    stats: [{ v: '2,000+', l: 'Payers connected' }, { v: '< 3s', l: 'Eligibility response time' }, { v: '100%', l: 'Pre-visit verification' }],
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    tagline: 'Clinical Reasoning Layer',
+    color: 'sky',
+    icon: MessageSquare,
+    logoText: 'OpenAI',
+    category: 'AI Reasoning',
+    website: 'https://openai.com',
+    elevator: `The transcription is done. The SOAP note is structured. Now the hard part: which ICD-10 code is correct? Which CPT code matches the complexity level? We use GPT-4o-mini with a clinical prompt — trained on our 74,719-code ICD-10 database — to suggest codes with confidence scores. The provider reviews, not re-codes.`,
+    howWeUseIt: [
+      { label: 'ICD-10 Code Suggestion', desc: 'We pass the de-identified SOAP note to GPT-4o-mini with a structured prompt. It returns ranked ICD-10 suggestions with confidence scores and rationale.' },
+      { label: 'E&M Level Determination', desc: 'The model analyzes medical decision-making complexity (MDM) to suggest the appropriate E&M level (99213 vs 99214 vs 99215).' },
+      { label: 'Denial Risk Prediction', desc: 'Before claim submission, we run the code combination through the model to predict denial probability based on payer patterns.' },
+      { label: 'PHI Stripping', desc: 'All patient identifiers are removed before the text reaches the OpenAI API. The model sees clinical content only — no names, DOBs, or member IDs.' },
+    ],
+    security: {
+      title: "Zero-PHI AI Reasoning",
+      description: "How we use OpenAI without exposing patient data:",
+      points: [
+        { label: 'PHI Stripped Before API Call', desc: 'A regex + NER pipeline removes all patient identifiers before the clinical text reaches OpenAI. The model sees symptoms and findings, not names.' },
+        { label: 'No Training on Our Data', desc: 'We use the OpenAI API with the zero-data-retention option. Our clinical prompts are never used to train OpenAI models.' },
+        { label: 'gpt-4o-mini for Cost Efficiency', desc: 'We use gpt-4o-mini for routine coding tasks — fast, accurate, and cost-effective at scale.' },
+        { label: 'Human Review Required', desc: 'AI suggestions are never auto-submitted. Every code suggestion requires provider or biller approval before the claim is generated.' },
+      ]
+    },
+    apiFlow: [
+      { step: '1', label: 'Strip PHI from SOAP note', code: `stripped = remove_phi(soap_note)\n# Removes: names, DOBs, member IDs, addresses` },
+      { step: '2', label: 'Send to GPT-4o-mini', code: `POST /v1/chat/completions\n{ "model": "gpt-4o-mini", "messages": [{ "role": "system", "content": CLINICAL_CODING_PROMPT }, { "role": "user", "content": stripped_soap }] }` },
+      { step: '3', label: 'Parse code suggestions', code: `{ "icd10": [{ "code": "F32.1", "confidence": 0.94, "rationale": "MDD moderate, single episode" }], "cpt": "99214", "em_level": "moderate" }` },
+      { step: '4', label: 'Present for review', code: `// Provider sees: F32.1 (94%) + 99214 — approve or edit` },
+    ],
+    scenario: {
+      label: 'AI Code Suggestion',
+      steps: [
+        { speaker: 'AssemblyAI', text: 'SOAP note generated: "Patient presents with persistent low mood, anhedonia, sleep disruption x 6 weeks. PHQ-9: 14."', type: 'provider' },
+        { speaker: 'Agent', text: 'Stripping PHI. Sending to GPT-4o-mini for ICD-10 suggestion...', type: 'ai' },
+        { speaker: 'AI', text: 'Suggested: F32.1 (MDD moderate, 94% confidence). E&M: 99214 (moderate complexity). Rationale: PHQ-9 ≥ 10, functional impairment documented.', type: 'ai' },
+        { speaker: 'Provider', text: 'Reviewing suggestion... Approved. ✓', type: 'provider' },
+        { speaker: 'Agent', text: 'Claim generated with F32.1 + 99214. Running NCCI scrub before submission.', type: 'ai' },
+      ],
+    },
+    stats: [{ v: '93%', l: 'ICD-10 accuracy' }, { v: '< 2s', l: 'Code suggestion latency' }, { v: '0', l: 'PHI sent to OpenAI' }],
+  },
+  {
+    id: 'stripe',
+    name: 'Stripe',
+    tagline: 'Copay & Balance Collection',
+    color: 'rose',
+    icon: Clock,
+    logoText: 'Stripe',
+    category: 'Payments',
+    website: 'https://stripe.com',
+    elevator: `Collecting copays at checkout is the worst time to collect them. Patients are leaving, staff are busy, and the conversation is awkward. We collect copays at booking — after eligibility confirms the amount — via a Stripe payment link sent by SMS. By the time the patient arrives, the copay is already paid.`,
+    howWeUseIt: [
+      { label: 'Copay Collection at Booking', desc: 'After Availity confirms the copay amount, we generate a Stripe Payment Link and send it via Twilio SMS. Patients pay on their phone before the visit.' },
+      { label: 'Balance Billing After Adjudication', desc: 'When the 835 remittance comes back, we calculate the patient balance and send a Stripe invoice automatically. No paper bills.' },
+      { label: 'Stripe Connect for Multi-Provider', desc: 'For group practices, we use Stripe Connect to route payments to the correct provider account automatically.' },
+      { label: 'Refund Automation', desc: 'If a claim is overpaid or a copay was collected incorrectly, we trigger a Stripe refund automatically when the 835 remittance indicates an overpayment.' },
+    ],
+    security: {
+      title: "PCI-DSS Compliant Payment Processing",
+      description: "How we handle payment data without touching card numbers:",
+      points: [
+        { label: 'We Never See Card Data', desc: 'Stripe handles all card processing. We generate payment links — patients enter card details directly into Stripe's PCI-DSS certified interface.' },
+        { label: 'Tokenized Payment Links', desc: 'Each payment link is time-limited and patient-specific. Links expire after 48 hours and are single-use.' },
+        { label: 'HIPAA + PCI Boundary', desc: 'Payment data and health data are kept in separate systems. Stripe never receives PHI; our FHIR layer never receives card data.' },
+        { label: 'Automated Reconciliation', desc: 'Stripe webhooks fire on payment completion, triggering automatic reconciliation against the patient's account balance in our system.' },
+      ]
+    },
+    apiFlow: [
+      { step: '1', label: 'Create payment link', code: `POST /v1/payment_links\n{ "line_items": [{ "price": copay_price_id, "quantity": 1 }], "metadata": { "patient_id": "pt_abc", "appointment_id": "ap_xyz" } }` },
+      { step: '2', label: 'Send via Twilio SMS', code: `POST /Messages\n{ "to": patient.phone, "body": "Your copay is $30. Pay here: pay.stripe.com/..." }` },
+      { step: '3', label: 'Webhook on payment', code: `POST /webhooks/stripe\n{ "type": "payment_intent.succeeded", "metadata": { "patient_id": "pt_abc" } }` },
+      { step: '4', label: 'Mark appointment paid', code: `PATCH /appointments/ap_xyz\n{ "copay_status": "paid", "amount_collected": 3000 }` },
+    ],
+    scenario: {
+      label: 'Copay Collection Flow',
+      steps: [
+        { speaker: 'Availity', text: 'X12 271: Copay confirmed at $30 for Sarah Johnson.', type: 'provider' },
+        { speaker: 'Agent', text: 'Generating Stripe payment link for $30 copay...', type: 'ai' },
+        { speaker: 'Agent', text: 'SMS sent: "Your copay for tomorrow's appointment is $30. Pay here: pay.stripe.com/..."', type: 'ai' },
+        { speaker: 'Patient', text: 'Sarah paid $30 via Stripe. 6:47 PM — 14 hours before the appointment.', type: 'patient' },
+        { speaker: 'Agent', text: 'Copay marked paid. Appointment confirmed. No front-desk collection needed. ✓', type: 'ai' },
+      ],
+    },
+    stats: [{ v: '> 85%', l: 'Pre-visit collection rate' }, { v: '$0', l: 'Card data we store' }, { v: 'Auto', l: 'Balance billing after adjudication' }],
+  },
+]
+
 const colorMap: Record<string, { bg: string; border: string; text: string; badge: string; dot: string; tab: string; tabActive: string; codeBg: string }> = {
   violet: {
     bg: 'bg-violet-50',
@@ -170,6 +304,16 @@ const colorMap: Record<string, { bg: string; border: string; text: string; badge
     tab: 'text-gray-500 hover:text-rose-600',
     tabActive: 'text-rose-700 border-b-2 border-rose-500',
     codeBg: 'bg-rose-950',
+  },
+  emerald: {
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-200',
+    text: 'text-emerald-700',
+    badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    dot: 'bg-emerald-500',
+    tab: 'text-gray-500 hover:text-emerald-600',
+    tabActive: 'text-emerald-700 border-b-2 border-emerald-500',
+    codeBg: 'bg-emerald-950',
   },
 }
 
@@ -361,13 +505,13 @@ export default function AppsPage() {
         <div className="max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-sm font-bold mb-8 shadow-sm">
             <Zap className="w-4 h-4" />
-            3 APIs. 1 Revenue Engine. Zero Hardware.
+            6 Integrations. 1 Revenue Engine.
           </div>
           <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight">
-            See How We Built It
+            What We Connect To
           </h1>
           <p className="text-xl text-gray-600 font-medium leading-relaxed max-w-2xl mx-auto">
-            Clear Mind Life is not a monolith. It's an orchestration layer built on three world-class APIs — each doing exactly what it was built for, wired together by autonomous agents.
+            Clear Mind Life is an orchestration layer. Each integration handles one job — transcription, eligibility, claims, communications, AI reasoning, payments. We wire them together so you don't have to.
           </p>
         </div>
       </section>
@@ -388,13 +532,19 @@ export default function AppsPage() {
           <p className="text-gray-400 font-medium mb-16 text-lg max-w-2xl mx-auto">
             Each API handles one layer of the revenue cycle. Our orchestration layer connects them into a single, autonomous pipeline.
           </p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 flex-wrap">
             {[
-              { label: 'NexHealth', sub: 'Patient books → Agent fires', color: 'bg-sky-500' },
+              { label: 'NexHealth', sub: 'Patient books → webhook fires', color: 'bg-sky-500' },
               { label: '→', sub: '', color: '' },
-              { label: 'AssemblyAI', sub: 'Visit → SOAP in real-time', color: 'bg-violet-500' },
+              { label: 'Availity', sub: 'X12 270/271 eligibility', color: 'bg-emerald-500' },
               { label: '→', sub: '', color: '' },
-              { label: 'Twilio', sub: 'Claim settled → Patient notified', color: 'bg-rose-500' },
+              { label: 'AssemblyAI', sub: 'Session → SOAP note', color: 'bg-violet-500' },
+              { label: '→', sub: '', color: '' },
+              { label: 'OpenAI', sub: 'ICD-10 + CPT suggestion', color: 'bg-gray-500' },
+              { label: '→', sub: '', color: '' },
+              { label: 'Twilio', sub: 'Claim status → patient SMS', color: 'bg-rose-500' },
+              { label: '→', sub: '', color: '' },
+              { label: 'Stripe', sub: 'Copay collected at booking', color: 'bg-indigo-500' },
             ].map((item, i) =>
               item.label === '→'
                 ? <ArrowRight key={i} className="w-6 h-6 text-gray-600 shrink-0" />

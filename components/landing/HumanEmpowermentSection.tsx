@@ -66,8 +66,8 @@ export default function HumanEmpowermentSection() {
                   <span className="text-indigo-600 font-bold">2</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Unlock the Bounty Network</h4>
-                  <p className="text-gray-600 font-medium">Elite &quot;Protocol Engineers&quot; can pick up overflow tasks from the global network to earn supplemental income.</p>
+                  <h4 className="font-bold text-gray-900 text-lg">Expert Task Network</h4>
+                  <p className="text-gray-600 font-medium">Senior billers handle complex cases the AI escalates — and earn bonus compensation for each one resolved.</p>
                 </div>
               </div>
             </div>

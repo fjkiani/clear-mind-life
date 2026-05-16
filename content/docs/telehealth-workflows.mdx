@@ -1,53 +1,120 @@
 ---
-title: "Telehealth Workflows in Production"
+title: "Integrations & Connections"
 publishedAt: "2026-02-24"
-summary: "Deep-dive into the production implementation of Clear Mind Life Triage's 40 FHIR workflows, mapping clinical logic to ReAct agent execution."
+updatedAt: "2026-05-01"
+summary: "Every system Clear Mind Life connects to, how the connection works, and what data flows where."
 kind: "detailed"
 ---
 
-## Beyond the Basics: High-Friction Orchestration
+## Overview
 
-The Clear Mind Life Triage engine tackles 40 comprehensive clinical scenarios designed to severely test an AI agent's logic, reasoning, and adherence to medical standards. 
+Clear Mind Life connects to six external systems: your EHR, your payer clearinghouse, AssemblyAI for transcription, NexHealth for scheduling, Twilio for communications, and Availity for eligibility and prior auth. Each connection has a specific, limited scope — we read and write only what's needed for RCM.
 
-Rather than relying purely on external APIs (like OPA or GraphQL endpoints), Clear Mind Life's complexity stems from rigorously adhering to **FHIR R4**, **HL7 v2.x**, and **HIPAA** using basic MCP tools.
+## EHR Integration (FHIR R4)
 
-### Scenario: Multi-Channel Post-Discharge Coordination
+We connect to your EHR via its FHIR R4 API endpoint. The connection uses OAuth 2.0 with SMART on FHIR scopes. We request only the scopes we need — no broad access.
 
-When a patient is discharged (e.g., for a Congestive Heart Failure exacerbation), the clinical friction is enormous. Left unmanaged, readmission rates skyrocket. Clear Mind Life orchestrates the entire post-discharge perimeter autonomously.
+**Resources we read:**
+- `Patient` — demographics, contact information, identifiers
+- `Coverage` — insurance information, subscriber ID, group number, payer reference
+- `Encounter` — visit history, encounter type, status
+- `Observation` — clinical observations, vital signs, assessment scores (PHQ-9, GAD-7)
+- `Condition` — active diagnoses and problem list
+- `MedicationRequest` — current medications (for medication management billing)
 
-Upon receiving the FHIR `Encounter` and `CarePlan` payload:
+**Resources we write:**
+- `Encounter` — we update encounter status and attach the generated SOAP note as a `DocumentReference`
+- `Claim` — we write the generated claim back to the EHR for record-keeping (submission goes through the clearinghouse, not the EHR)
 
-1.  **Scheduling:** Uses the `calendar` MCP to schedule a mandatory 7-day follow-up with the precise specialist (e.g., Neurology or Cardiology).
-2.  **Document Generation:** Pipes the care plan instructions through the `pdf-generator` MCP, resulting in a HIPAA-compliant discharge summary.
-3.  **Encrypted Dispatch:** Sends the PDF summary directly to the patient via the secure `email` MCP.
-4.  **Medication Adherence:** Schedules sequenced, PHI-stripped medication reminders using the `sms-messaging` MCP.
-5.  **Clinical Oversight:** Generates a check-in ticket in the `task-management` MCP for the care coordinator on Day 3.
+If your EHR's FHIR implementation is incomplete (missing Coverage data, partial Encounter resources), our agent fills gaps from secondary sources and flags the discrepancy for your records.
 
-```json
-{
-  "follow_up_scheduled": {
-    "provider": "Dr. Jones (Cardiology)",
-    "date": "2026-11-10",
-    "time": "09:00"
-  },
-  "discharge_summary_sent": true,
-  "medication_reminders_scheduled": [
-    "2026-11-04 08:00 - Take Furosemide",
-    "2026-11-04 08:00 - Take Metoprolol"
-  ],
-  "check_in_task_created": {
-    "assigned_to": "nurse_coordinator",
-    "date": "2026-11-06"
-  }
-}
+## Payer Connections (X12 EDI)
+
+Most payer transactions use X12 EDI, not FHIR. We route these through your clearinghouse connection.
+
+**X12 270/271 — Eligibility:**
+The 270 transaction asks the payer whether a patient is covered for a specific service type on a specific date. The 271 response contains coverage details, benefit information, and authorization requirements. We send 270s automatically when appointments are booked and on demand from the patient record.
+
+**X12 837 — Claim Submission:**
+The 837P (professional) transaction is the standard format for outpatient mental health claims. We generate the 837 from the signed SOAP note and approved codes, run it through the coding database checks, and submit it to the clearinghouse. The clearinghouse forwards it to the payer.
+
+**X12 835 — Remittance:**
+The 835 transaction is the payer's payment explanation. It contains the paid amount, any adjustments, and denial reason codes for rejected lines. We receive 835 files from the clearinghouse, parse them, and post payments to the corresponding claims automatically.
+
+## AssemblyAI (Transcription)
+
+AssemblyAI provides real-time speech-to-text for ambient session transcription. The connection is a WebSocket stream over TLS 1.3.
+
+**What we send:** The audio stream from the telehealth session, in real time. Audio is sent as raw PCM data, chunked into 100ms frames.
+
+**What we receive:** A real-time transcript with speaker diarization (who said what) and confidence scores for each word.
+
+**Zero-retention policy:** We have a BAA with AssemblyAI that prohibits audio retention. Audio frames are processed in memory and discarded immediately after transcription. AssemblyAI does not store audio from our sessions. The transcript is stored in our encrypted database, associated with the encounter record.
+
+**What we do not send:** Patient name, date of birth, diagnosis, or any structured PHI. The audio stream contains only what was spoken during the session.
+
+## NexHealth (Scheduling)
+
+NexHealth is our scheduling integration layer. It connects to your EHR's scheduling system and provides a webhook API for appointment events.
+
+**What NexHealth sends us:**
+- `appointment.created` — new appointment booked, includes patient ID, provider ID, appointment type, and date/time
+- `appointment.updated` — appointment rescheduled or cancelled
+- `appointment.completed` — appointment marked complete (triggers SOAP note generation)
+
+**What we read from NexHealth:**
+- Patient demographics (name, DOB, contact info) for eligibility check pre-population
+- Intake form responses (insurance information, reason for visit)
+- Provider availability for scheduling conflict detection
+
+**What we write to NexHealth:**
+- Eligibility check results, attached to the appointment record
+- Prior auth status and authorization number, attached to the appointment record
+
+## Twilio (Communications)
+
+Twilio handles outbound SMS and voice for patient-facing communications.
+
+**SMS:** Appointment confirmations, reminders, and eligibility alerts. All SMS messages are stripped of clinical PHI before sending. A message will say "Your appointment with Dr. Chen is confirmed for Tuesday at 2pm" — not the reason for the visit or any diagnosis information.
+
+**Voice IVR:** For payer calls that require a live phone interaction (some prior auth requests, certain eligibility verifications), our agent uses Twilio's programmable voice to navigate payer IVR systems. The agent handles hold times, menu navigation, and captures the response. Staff are notified when a call completes with the result.
+
+## Availity (Eligibility & Prior Auth)
+
+Availity is our primary clearinghouse for real-time eligibility and prior authorization. We connect via Availity's REST API.
+
+**Real-time eligibility:** We send eligibility requests to Availity for 900+ commercial payers. Availity routes the request to the correct payer and returns the response, typically within 3–5 seconds.
+
+**Prior auth status:** For payers that support electronic prior auth through Availity, we submit auth requests and poll for status updates. When an auth is approved or denied, we receive a webhook notification and update the appointment record.
+
+**Supported payers include:** UnitedHealthcare, Aetna, Cigna, Humana, Anthem, BCBS plans, Magellan, Optum, Beacon Health Options, and 890+ others.
+
+## End-to-End Data Flow
+
+```
+Patient books appointment
+        ↓
+NexHealth webhook → Receptionist Agent
+        ↓
+X12 270 eligibility check via Availity
+        ↓
+271 response: coverage confirmed, auth required flag
+        ↓
+Prior auth request submitted (if required)
+        ↓
+Session occurs → AssemblyAI transcription
+        ↓
+Encounter Agent generates SOAP note draft
+        ↓
+Provider reviews and approves note (3–5 min)
+        ↓
+Billing Agent generates claim from signed note
+        ↓
+Claim scrubbed against 2.5M coding records
+        ↓
+Clean claim → X12 837 submitted via clearinghouse
+        ↓
+X12 835 remittance received → payment posted
 ```
 
-### Emitting Valid HL7 V2.x Logs
-Every confirmed appointment triggers a legacy-compatible HL7 message payload for seamless EHR ingestion:
-```hl7
-MSH|^~\&|SCHEDULE|CLINIC|EMR|HOSPITAL|20261103120000||SIU^S12|123456|P|2.5
-PID|1||MRN-12345||DOE^JOHN||19850315|M
-SCH|1||||||Routine Office Visit|||||20261110140000
-```
-
-By constraining the agent to standardized schemas like FHIR and HL7, Clear Mind Life ensures deterministic outputs even when reasoning through heavily unstructured patient transcripts.
+Every step in this flow is logged with a timestamp and the action taken. The audit trail is available in **Settings → Audit Log** and is retained for 7 years per HIPAA requirements.

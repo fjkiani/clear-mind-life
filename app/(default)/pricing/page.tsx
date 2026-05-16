@@ -18,9 +18,9 @@ export default function Pricing() {
       <Faqs />
       <Cta
         className="overflow-hidden"
-        heading="Create your next project with Clear Mind Life"
-        buttonText="Start Free Trial"
-        buttonLink="#0"
+        heading="Stop losing revenue to preventable claim denials"
+        buttonText="Open Live Dashboard"
+        buttonLink="/dashboard"
       />
     </>
   );

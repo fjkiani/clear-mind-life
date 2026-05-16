@@ -1,46 +1,74 @@
 ---
-title: "Telehealth Operations 101"
+title: "Getting Started"
 publishedAt: "2026-02-24"
-updatedAt: "2026-02-24"
-summary: "An introduction to the Clear Mind Life Triage clinical receptionist architecture, transforming unstructured patient narratives into actionable, HIPAA-compliant FHIR R4 and HL7 data."
+updatedAt: "2026-05-01"
+summary: "Connect your practice in under 10 minutes. What you need, what we set up, what happens on day one."
 kind: "detailed"
 ---
 
-## 101: The $4.5 Trillion Healthcare Challenge
+## What You Need Before You Start
 
-Healthcare operations are plagued by massive administrative bottlenecks, resulting in unmanageable workloads, provider burnout, and high claim denial rates. 
+- An EHR system with a FHIR R4 endpoint (Epic, Cerner, Athena, or any FHIR-compatible system)
+- Payer credentials for at least one clearinghouse (Availity, Change Healthcare, or direct payer portal access)
+- Your practice's NPI number(s) and provider NPIs
+- A Clerk account for authentication (we'll walk you through this)
 
-Clear Mind Life Triage introduces an AI-powered receptionist capable of executing complex clinical operations securely and autonomously, utilizing existing Model Context Protocol (MCP) servers—without needing custom API wrappers for every EHR system on Earth.
+If your EHR doesn't have a FHIR R4 endpoint, contact us before starting. We support HL7 v2 and direct database integrations for legacy systems — setup takes longer but it's doable.
 
-## Core Capabilities of Clear Mind Life Triage
+## Step 1: Connect Your EHR
 
-The Clear Mind Life healthcare agent operates on the ReAct (Reasoning and Acting) paradigm, providing end-to-end orchestration for clinical communication:
+Go to **Settings → Integrations → EHR** and enter your FHIR R4 base URL. For Epic, this looks like `https://[your-org].epic.com/api/FHIR/R4`. For Cerner, it's `https://fhir-myrecord.cerner.com/r4/[tenant-id]`.
 
-### 1. Patient Intake & Registration
-Collecting demographics, checking insurance eligibility, and securing HIPAA consent is natively codified. The agent handles multi-language inputs (e.g., Spanish, Chinese) and produces standard FHIR `Patient` and `Coverage` resources.
+Click **Test Connection**. We'll attempt to read a Patient resource and a Coverage resource. If the connection succeeds, you'll see a green confirmation. If it fails, the error message will tell you exactly what's wrong — missing scope, invalid endpoint, or authentication issue.
 
-### 2. Clinical Appointment Scheduling
-Clear Mind Life Triage intelligently schedules appointments by interfacing with the `calendar` MCP. It natively resolves referential logic (e.g., matching a patient to an in-network cardiologist), manages double bookings, and accommodates dynamic timezone conversions for distributed telehealth teams.
+Once connected, we'll pull your active patient list and provider roster. This takes 2–5 minutes depending on practice size.
 
-### 3. Safety-Critical Clinical Triage
-The agent autonomously assesses the urgency of chief complaints.
-*   **Routine:** "I need a prescription refill." -> Sent to pharmacy queue.
-*   **Urgent:** "I've had a bad cough for three days." -> Routed to a same-day telehealth queue.
-*   **Emergent:** "I have radiating chest pain." -> Immediate escalation; advises calling 911 or visiting the ER while notifying the on-call provider.
+## Step 2: Add Your Payer Credentials
 
-*Failure to correctly route emergent symptoms results in an immediate benchmark failure.* Accuracy in triage is paramount in Clear Mind Life.
+Go to **Settings → Integrations → Payers**. Add your clearinghouse credentials:
 
-### 4. Zero-Trust Insurance Verification
-The system executes a real-time FHIR `CoverageEligibilityRequest` query before the patient meets the physician. This pre-computes copays, validates network status, and triggers automated tasks if the procedure requires prior authorization.
+- **Availity:** Enter your Availity username, password, and submitter ID
+- **Change Healthcare:** Enter your trading partner ID and API credentials
+- **Direct payer:** Enter the payer ID and any portal credentials
 
-## Getting Started: Implementation
+We support 900+ commercial payers. If your payer isn't in the list, use the "Add Custom Payer" option and enter the payer ID — we'll route eligibility checks through your clearinghouse.
 
-Clear Mind Life Triage does not require massive re-platforming. It coordinates existing digital assets through localized MCP servers:
+Click **Run Test Eligibility** to verify the connection. Enter any patient's member ID and date of birth. If the 270/271 transaction completes successfully, you're connected.
 
-*   **`calendar`**: Provider availability and slot logic.
-*   **`email`**: Encrypted, HIPAA-compliant patient confirmations.
-*   **`sms-messaging`**: Appointment reminders (stripped of raw PHI).
-*   **`task-management`**: Post-discharge follow-ups and care coordination tasks.
-*   **`pdf-generator`**: Rendering patient consent forms and mapped discharge summaries.
+## Step 3: Configure Your Practice
 
-If you are a clinical ops leader looking to eradicate manual transcription and automate the patient lifecycle, proceed to the [Telehealth Advanced Workflows](/documentation/telehealth-workflows) chapter.
+Go to **Settings → Practice**. Fill in:
+
+- Practice name and Tax ID (EIN)
+- Practice NPI (Type 2)
+- Billing address and pay-to address
+- Specialty (select all that apply — Psychiatry, Psychology, Licensed Clinical Social Work, etc.)
+
+Then go to **Settings → Providers** and add each provider:
+
+- Full name and credentials
+- Individual NPI (Type 1)
+- Specialty and taxonomy code
+- Supervising provider (if applicable for supervised billing)
+
+This information populates the 837 claim header. Get it right here and you won't have to correct it on every claim.
+
+## Step 4: Run Your First Eligibility Check
+
+Go to **Patients** and select any patient. Click **Check Eligibility**. The Receptionist Agent will send a real-time X12 270 transaction to the patient's payer and display the 271 response.
+
+You'll see: coverage status, plan name, copay, deductible (met/remaining), out-of-pocket maximum, and whether mental health services require prior authorization. If the patient has a behavioral health carve-out (e.g., Optum managing mental health benefits for a UHC plan), that will be identified and the eligibility check will be routed to the correct payer.
+
+## Day One: What to Expect
+
+On your first day, the platform will:
+
+- **Run eligibility checks** on all patients with upcoming appointments in the next 7 days
+- **Flag any prior auth requirements** for those appointments
+- **Scan your pending claims queue** (if you've connected your EHR's billing data) and identify claims with coding issues before submission
+
+The dashboard will show you three numbers: claims ready to submit, claims flagged for review, and eligibility checks completed. Start with the flagged claims — those are the ones that would have been denied.
+
+Your billing agent is running from the moment you connect. You don't need to configure rules or set up workflows. The coding databases are already loaded. The payer rules are already in the system.
+
+The first week is mostly review: checking that the SOAP notes look right, confirming the ICD-10 suggestions are accurate, and getting comfortable with the approval workflow. By week two, most practices are running on autopilot.
