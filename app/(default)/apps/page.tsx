@@ -138,8 +138,6 @@ const INTEGRATIONS = [
     },
     stats: [{ v: '< 2 min', l: 'Avg IVR call time' }, { v: '90 days', l: 'AR cycle eliminated' }, { v: '100%', l: 'Patient comms automated' }],
   },
-]
-
   {
     id: 'availity',
     name: 'Availity',
